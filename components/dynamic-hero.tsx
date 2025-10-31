@@ -148,9 +148,27 @@ export default function DynamicHero() {
           </div>
         </div>
 
+        {/* Partnership Highlights - Top Right */}
+        <div className="absolute top-6 right-6 lg:right-10 z-10 flex flex-col gap-3">
+          <div className="bg-white/90 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg border border-white/20 animate-pulse-slow">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span className="text-xs font-semibold text-gray-800">Startup India</span>
+            </div>
+            <p className="text-xs text-gray-600 mt-1">Recognized Partner</p>
+          </div>
+          <div className="bg-white/90 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg border border-white/20 animate-pulse-slow" style={{ animationDelay: '0.5s' }}>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+              <span className="text-xs font-semibold text-gray-800">MSME</span>
+            </div>
+            <p className="text-xs text-gray-600 mt-1">Government Partner</p>
+          </div>
+        </div>
+
         {/* Right-side Visionary CTA */}
         <aside
-          className="pointer-events-auto mt-8 md:mt-0 md:absolute md:top-10 md:right-6 lg:right-10 md:flex md:items-start"
+          className="pointer-events-auto mt-8 md:mt-0 md:absolute md:top-48 md:right-6 lg:right-10 md:flex md:items-start"
           aria-label="Have a visionary idea"
           style={{ transform: "translateZ(30px)" }}
         >

@@ -48,7 +48,7 @@ export const programs: Program[] = [
     mode: "Hybrid",
     mentor: "Dr. A. Sen",
     lead: "Innovation Cell",
-    image: "/programs/team-incubation-workspace.png", 
+    image: "/programs/Startup-Incubation&Acceleration.jpg", 
   
     link: "/startups",
     tags: ["MVP build sprints", "Investor readiness"],

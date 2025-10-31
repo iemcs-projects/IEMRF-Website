@@ -26,7 +26,7 @@ export function InternshipCharts({
 }) {
   const pieData = [
     { name: "Completed", value: totalInterns },
-    { name: "Ongoing", value: 0 },
+    { name: "Ongoing", value: 4 },
   ]
 
   // Domain-specific color mapping

@@ -1,7 +1,5 @@
 "use client"
 
-import { Card, CardContent } from "@/components/ui/card"
-
 const processSteps = [
   {
     step: "01",
@@ -57,36 +55,59 @@ export function InternshipProcess() {
         </p>
       </div>
       
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {processSteps.map((step, index) => (
-          <Card key={index} className="relative overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-            <CardContent className="p-6">
-              <div className="flex items-start space-x-4">
-                <div className={`flex-shrink-0 w-12 h-12 ${step.color} rounded-lg flex items-center justify-center text-white font-bold text-lg`}>
+      {/* Flowchart Structure */}
+      <div className="relative max-w-6xl mx-auto">
+        {/* Desktop Flowchart */}
+        <div className="hidden lg:block">
+          <div className="flex flex-wrap justify-center items-start gap-8 pb-20">
+            {processSteps.map((step, index) => (
+              <div key={index} className="flex items-center">
+                {/* Process Step */}
+                <div className="relative">
+                  <div className={`w-20 h-20 ${step.color} rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg hover:scale-105 transition-transform duration-300`}>
+                    {step.step}
+                  </div>
+                  <div className="absolute -bottom-20 left-1/2 transform -translate-x-1/2 text-center w-32">
+                    <h3 className="text-sm font-semibold text-gray-900 mb-1">{step.title}</h3>
+                    <p className="text-xs text-gray-600 leading-tight">{step.description}</p>
+                  </div>
+                </div>
+                
+                {/* Arrow Connector */}
+                {index < processSteps.length - 1 && (
+                  <div className="flex items-center mx-4">
+                    <div className="w-8 h-0.5 bg-gray-300"></div>
+                    <div className="w-0 h-0 border-l-4 border-l-gray-300 border-t-2 border-t-transparent border-b-2 border-b-transparent ml-1"></div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Mobile Flowchart */}
+        <div className="lg:hidden">
+          <div className="space-y-8">
+            {processSteps.map((step, index) => (
+              <div key={index} className="flex items-center relative">
+                {/* Step Circle */}
+                <div className={`w-16 h-16 ${step.color} rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg flex-shrink-0`}>
                   {step.step}
                 </div>
-                <div className="flex-1">
-                  <div className="flex items-center mb-2">
-                    <span className="text-2xl mr-2">{step.icon}</span>
-                    <h3 className="text-lg font-semibold text-gray-900">{step.title}</h3>
-                  </div>
-                  <p className="text-gray-600 text-sm leading-relaxed">{step.description}</p>
+                
+                {/* Step Content */}
+                <div className="ml-4 flex-1">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-1">{step.title}</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">{step.description}</p>
                 </div>
+                
+                {/* Vertical Arrow */}
+                {index < processSteps.length - 1 && (
+                  <div className="absolute left-8 top-20 w-0.5 h-8 bg-gray-300"></div>
+                )}
               </div>
-              
-              {/* Connecting line for desktop */}
-              {index < processSteps.length - 1 && (
-                <div className="hidden lg:block absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-0.5 h-6 bg-gray-200" />
-              )}
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-      
-      {/* Timeline for mobile */}
-      <div className="lg:hidden mt-8">
-        <div className="flex justify-center">
-          <div className="w-0.5 h-32 bg-gradient-to-b from-blue-500 to-cyan-500" />
+            ))}
+          </div>
         </div>
       </div>
     </section>

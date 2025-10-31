@@ -3,7 +3,7 @@ export const programs = [
     name: "Incubation & Pre-Seed",
     description:
       "Guided incubation with mentorship on product-market fit, IP strategy, and technology commercialization.",
-    image: "/programs/startup-incubation.jpg",
+    image: "/programs/Startup-Incubation&Acceleration.jpg",
   },
   {
     name: "Innovation Grants",
@@ -40,20 +40,28 @@ export const startups = [
 
 export const partners = [
   {
-    name: "Govt. Innovation Mission",
-    image: "/partners/government-innovation.jpg",
+    name: "Startup India",
+    image: "/startup_India.png",
   },
   {
-    name: "TechCorp Labs",
+    name: "MSME",
     image: "/partners/techcorp-labs.jpg",
   },
   {
-    name: "Impact Ventures",
-    image: "/partners/impact-ventures.jpg",
+    name: "SwifTrinity",
+    image: "/Swiftrinity.png",
   },
   {
-    name: "IEM Alumni Network",
-    image: "/partners/iem-alumni.jpg",
+    name: "Humanize",
+    image: "/Humanize.png",
+  },
+   {
+    name: "Bare",
+    image: "/BARE.png",
+  },
+   {
+    name: "Alphaxine",
+    image: "/Alphaxine.png",
   },
 ]
 

@@ -3,7 +3,7 @@ import { SiteFooter } from "@/components/site-footer"
 import AboutHero from "@/components/about-hero"
 import { AboutValues } from "@/components/about-values"
 import { AboutLeadership } from "@/components/about-leadership"
-import { AboutTimeline } from "@/components/about-timeline"
+import { AboutTeam } from "@/components/about-team"
 import { AboutMetrics } from "@/components/about-metrics"
 
 export default function AboutPage() {
@@ -15,11 +15,11 @@ export default function AboutPage() {
         <AboutHero />
       </div>
 
-      {/* Comprehensive About content: values, leadership, timeline, metrics */}
+      {/* Comprehensive About content: values, leadership, team, metrics */}
       <section className="space-y-10 py-6">
         <AboutValues />
         <AboutLeadership />
-        <AboutTimeline />
+        <AboutTeam />
         <AboutMetrics />
       </section>
 

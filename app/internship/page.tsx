@@ -17,6 +17,19 @@ export default function InternshipPage() {
         <div className="absolute inset-0 -z-10 bg-gradient-to-br from-blue-600 via-emerald-500 to-purple-600" aria-hidden="true" />
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.15),transparent_40%),_radial-gradient(circle_at_80%_30%,rgba(255,255,255,0.12),transparent_40%)]" aria-hidden="true" />
         <div className="mx-auto max-w-6xl px-4 py-14 sm:py-16 md:py-20">
+          {/* Apply for Internship - Top Right */}
+          <div className="absolute top-6 right-6 lg:right-10 z-10">
+            <div className="bg-white/90 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg border border-white/20">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                <span className="text-sm font-semibold text-gray-800">Apply Now</span>
+              </div>
+              <a href="#apply" className="inline-flex h-8 items-center justify-center rounded-md bg-emerald-600 px-3 text-xs font-semibold text-white shadow hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/80 mt-2">
+                Apply for Internship
+              </a>
+            </div>
+          </div>
+
           <AnimatedSection>
             <header className="max-w-3xl text-white">
               <p className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-medium shadow ring-1 ring-white/30 backdrop-blur">
@@ -31,9 +44,6 @@ export default function InternshipPage() {
                 their summer internships through this program.
               </p>
               <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-                <a href="#apply" className="inline-flex h-11 items-center justify-center rounded-lg bg-white px-5 text-sm font-semibold text-blue-700 shadow hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80">
-                  View Application
-                </a>
                 <a href="#projects" className="inline-flex h-11 items-center justify-center rounded-lg border-2 border-white/70 bg-white/10 px-5 text-sm font-semibold text-white backdrop-blur hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80">
                   Explore Projects
                 </a>

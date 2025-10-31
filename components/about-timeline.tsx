@@ -21,11 +21,11 @@ const milestones = [
     title: "Innovation at Scale",
     desc: "70+ interns, 25+ projects, and multiple startup demos released.",
   },
-]
+] 
 
-export function AboutTimeline() {
+export function AboutTimeline() { 
   return (
-    <AnimatedSection as="section" className="mx-auto max-w-6xl px-4">
+    <AnimatedSection as ="section" className="mx-auto max-w-6xl px-4">
       <div className="mb-4">
         <h2 className="text-pretty text-2xl font-semibold text-foreground">Our Journey</h2>
       </div>

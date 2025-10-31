@@ -4,8 +4,6 @@ import DynamicHero from "@/components/dynamic-hero"
 import { AnimatedSection } from "@/components/animated-section"
 import { Metrics } from "@/components/metrics"
 import { programs, partners } from "@/lib/data"
-import { NewsList } from "@/components/news-list"
-import { EventsListHome } from "@/components/events-list-home"
 import ImpactCards from "@/components/impact-cards"
 import ScrollingBanner from "@/components/scrolling-banner"
 
@@ -23,7 +21,7 @@ export default function HomePage() {
         <AnimatedSection>
           <div className="text-center">
             <h2 className="text-pretty text-2xl font-semibold text-gray-900">About IEMRF</h2>
-            <p className="mt-2 max-w-4xl mx-auto text-sm leading-6 text-gray-600">
+            <p className="mt-2 max-w-4xl mx-auto text-sm leading-6 text-gray-600 text-justify">
               IEM Research Foundation (IEMRF), the first academic institute-based research foundation in Eastern India, is a Section 8 not for profit company founded by IEM Trust. Conceived by Prof. Satyajit Chakrabarti, Director at Institute of Engineering & Management (IEM), IEM Research Foundation intends to foster innovation, entrepreneurship and societal benefit.
 
               Serving as a dynamic ecosystem, it supports startups by helping them turn their visionary ideas into successful, high-impact businesses. IEMRF also collaborates with different government and private agencies to strategically leverage their expertise and resources in implementing emerging entrepreneurial development initiatives.IEMRF partners with corporate entities to foster innovation and entrepreneurship across states. IEMRF provides startups and innovators with holistic support services. This includes mentorship from IEM alumni, faculty and seasoned entrepreneurs offering critical guidance on business strategy and technology commercialization.
@@ -87,22 +85,6 @@ export default function HomePage() {
           </div>
         </AnimatedSection>
 
-        <AnimatedSection className="mt-16">
-          <div className="text-center">
-            <h2 className="text-pretty text-3xl font-bold text-gray-900 mb-2">Latest News & Events</h2>
-            <p className="text-gray-600 mb-8 max-w-2xl mx-auto">Stay updated with the latest developments and upcoming events at IEMRF.</p>
-            <div className="grid gap-10 md:grid-cols-2 max-w-6xl mx-auto">
-              <div>
-                <h3 className="mb-3 text-left text-lg font-semibold text-gray-900">News</h3>
-                <NewsList />
-              </div>
-              <div>
-                <h3 className="mb-3 text-left text-lg font-semibold text-gray-900">Events</h3>
-                <EventsListHome />
-              </div>
-            </div>
-          </div>
-        </AnimatedSection>
 
         {/* CTA moved into DynamicHero right-side card */}
       </section>

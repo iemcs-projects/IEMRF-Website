@@ -10,7 +10,7 @@ import { CountUp } from "@/components/count-up"
 type Project = {
   id: string
   title: string
-  team: string
+  department: string
   domain: string
   description: string
   image?: string
@@ -39,7 +39,7 @@ export function InternshipContent() {
         const matchesQuery =
           q.length === 0 ||
           p.title.toLowerCase().includes(q) ||
-          p.team.toLowerCase().includes(q) ||
+          p.department.toLowerCase().includes(q) ||
           p.description.toLowerCase().includes(q) ||
           p.domain.toLowerCase().includes(q)
         const matchesDomain = domainFilter === "All" || p.domain === domainFilter
@@ -129,7 +129,7 @@ export function InternshipContent() {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search by project, team, or domain"
+            placeholder="Search by project, department, or domain"
             aria-label="Search projects"
             className="w-full rounded-md border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[var(--color-chart-2)]"
           />
