@@ -56,8 +56,8 @@ export const partners = [
     image: "/Humanize.png",
   },
    {
-    name: "Bare",
-    image: "/BARE.png",
+    name: "Bair ai",
+    image: "/Bair.png",
   },
    {
     name: "Alphaxine",
