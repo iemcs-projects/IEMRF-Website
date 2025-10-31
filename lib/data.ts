@@ -45,7 +45,7 @@ export const partners = [
   },
   {
     name: "MSME",
-    image: "/partners/techcorp-labs.jpg",
+    image: "/MSME2.png",
   },
   {
     name: "SwifTrinity",
