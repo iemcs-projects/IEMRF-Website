@@ -2,15 +2,18 @@
 
 import { useEffect, useMemo, useState } from "react"
 import { useSearchParams } from "next/navigation"
+import { SiteHeader } from "@/components/site-header"
+import { SiteFooter } from "@/components/site-footer"
 import { AnimatedSection } from "@/components/animated-section"
 import { InternshipContent } from "@/components/internship-content"
+import { Button } from "@/components/ui/button"
 import { InternshipApply } from "@/components/internship-apply"
 import { InternshipBenefits } from "@/components/internship-benefits"
 import { InternshipProcess } from "@/components/internship-process"
 import { InternshipTestimonials } from "@/components/internship-testimonials"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
-export default function InternshipPageContent() {
+export default function InternshipPage() {
   const searchParams = useSearchParams()
   const [applyOptionsOpen, setApplyOptionsOpen] = useState(false)
   const [highlightApplyButton, setHighlightApplyButton] = useState(false)
@@ -18,7 +21,9 @@ export default function InternshipPageContent() {
   useEffect(() => {
     if (searchParams.get("highlight") === "apply") {
       setHighlightApplyButton(true)
-      const timer = window.setTimeout(() => setHighlightApplyButton(false), 6000)
+      const timer = window.setTimeout(() => {
+        setHighlightApplyButton(false)
+      }, 6000)
       return () => window.clearTimeout(timer)
     }
   }, [searchParams])
@@ -28,17 +33,18 @@ export default function InternshipPageContent() {
       `bg-white/90 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg border border-white/20 transition ${
         highlightApplyButton ? "ring-2 ring-emerald-500 animate-[pulse_1.1s_ease-in-out_infinite]" : ""
       }`,
-    [highlightApplyButton]
+    [highlightApplyButton],
   )
 
   return (
-    <>
-      {/* Hero Section */}
+    <main>
+      <SiteHeader />
+      {/* Vibrant hero section */}
       <section className="relative isolate">
         <div className="absolute inset-0 -z-10 bg-gradient-to-br from-blue-600 via-emerald-500 to-purple-600" aria-hidden="true" />
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.15),transparent_40%),_radial-gradient(circle_at_80%_30%,rgba(255,255,255,0.12),transparent_40%)]" aria-hidden="true" />
-
         <div className="mx-auto max-w-6xl px-4 py-14 sm:py-16 md:py-20">
+          {/* Apply for Internship - Top Right */}
           <div className="absolute top-6 right-6 lg:right-10 z-10">
             <div className={topBannerClasses}>
               <div className="flex items-center gap-2">
@@ -80,6 +86,21 @@ export default function InternshipPageContent() {
             </header>
           </AnimatedSection>
         </div>
+
+        {/* subtle decorative bubbles */}
+        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
+          {[...Array(8)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute h-2 w-2 rounded-full bg-white/25 animate-pulse"
+              style={{
+                left: `${(i * 13) % 100}%`,
+                top: `${(i * 17) % 100}%`,
+                animationDelay: `${i * 0.3}s`,
+              }}
+            />
+          ))}
+        </div>
       </section>
 
       <section className="mx-auto max-w-6xl px-4 py-10">
@@ -88,24 +109,28 @@ export default function InternshipPageContent() {
         </AnimatedSection>
       </section>
 
+      {/* Benefits Section */}
       <section className="mx-auto max-w-6xl px-4 py-10">
         <AnimatedSection>
           <InternshipBenefits />
         </AnimatedSection>
       </section>
 
+      {/* Process Section */}
       <section className="mx-auto max-w-6xl px-4 py-10">
         <AnimatedSection>
           <InternshipProcess />
         </AnimatedSection>
       </section>
 
+      {/* Testimonials Section */}
       <section className="mx-auto max-w-6xl px-4 py-10">
         <AnimatedSection>
           <InternshipTestimonials />
         </AnimatedSection>
       </section>
 
+      {/* Apply for Internship */}
       <section id="apply" className="mx-auto max-w-6xl px-4 pb-14">
         <AnimatedSection>
           <div className="rounded-2xl border bg-white p-6 shadow-sm">
@@ -119,6 +144,7 @@ export default function InternshipPageContent() {
           </div>
         </AnimatedSection>
       </section>
+      <SiteFooter />
 
       <Dialog open={applyOptionsOpen} onOpenChange={setApplyOptionsOpen}>
         <DialogContent className="max-w-3xl">
@@ -166,6 +192,6 @@ export default function InternshipPageContent() {
           </div>
         </DialogContent>
       </Dialog>
-    </>
+    </main>
   )
 }
