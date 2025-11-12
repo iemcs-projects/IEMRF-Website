@@ -1,34 +1,54 @@
 "use client"
+import Link from "next/link"
 import { cn } from "@/lib/utils"
 
 type ScrollingBannerProps = {
   text?: string
   className?: string
   speedSeconds?: number
+  href?: string
 }
 
 export default function ScrollingBanner({
-  text = "Over seventy IEMRF students successfully completed their summer internships—contributing to real-world research, building prototypes, and collaborating with mentors and startup founders to turn ideas into impact.",
+  text = "Apply for Winter Internship 2025 🚀| Applications are open now! | Gain Real Industrial Experience & Build Your Future Today! 🔧✨",
   className,
   speedSeconds = 28,
+  href,
 }: ScrollingBannerProps) {
+  const Content = (
+    <div
+      className="relative overflow-hidden"
+      aria-live="polite"
+    >
+      <div
+        className="whitespace-nowrap will-change-transform"
+        style={{
+          animation: `scroll-once linear infinite`,
+          animationDuration: `${speedSeconds}s`,
+        }}
+      >
+        <span className="inline-block px-4 text-sm md:text-base font-medium">{text}</span>
+      </div>
+    </div>
+  )
+
   return (
     <div
-      className={cn("w-full bg-blue-700 text-white py-2 md:py-2.5", className)}
+      className={cn(
+        "w-full bg-blue-700 text-white py-2 md:py-2.5",
+        href && "cursor-pointer hover:bg-blue-800 transition-colors duration-200",
+        className,
+      )}
       role="region"
-      aria-label="Internship highlight"
+      aria-label="News highlight"
     >
-      <div className="relative overflow-hidden">
-        <div
-          className="whitespace-nowrap will-change-transform"
-          style={{
-            animation: `scroll-once linear infinite`,
-            animationDuration: `${speedSeconds}s`,
-          }}
-        >
-          <span className="inline-block px-4 text-sm md:text-base font-medium">{text}</span>
-        </div>
-      </div>
+      {href ? (
+        <Link href={href} className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70">
+          {Content}
+        </Link>
+      ) : (
+        Content
+      )}
 
       <style jsx>{`
         @keyframes scroll-once {

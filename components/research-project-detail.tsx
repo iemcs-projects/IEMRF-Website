@@ -8,6 +8,13 @@ import { Download, Calendar, Users, DollarSign, ExternalLink, ArrowLeft } from "
 import type { ResearchProject } from "@/lib/research-data"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
+import { useState } from "react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { findPersonByName } from "@/lib/people"
+import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card"
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
+import { leadershipTeam } from "@/lib/leadership-data"
+import { teamMembers } from "@/lib/team-data"
 import {
   Line,
   LineChart,
@@ -29,6 +36,33 @@ const statusColor: Record<ResearchProject["status"], string> = {
 }
 
 export function ResearchProjectDetail({ project }: Props) {
+  // Resolve person metadata (handles titles like Dr./Prof.)
+  const mentors = project.mentor || []
+  const resolvedMentors = mentors.map(m => findPersonByName(m))
+  const resolvedLead = project.lead ? findPersonByName(project.lead) : null
+  const developers = project.developer ? (Array.isArray(project.developer) ? project.developer : [project.developer]) : []
+  const resolvedDevelopers = developers.map(d => findPersonByName(d))
+  const team = project.team || project.teamMembers || []
+
+  // Find the full profile data from leadership or team using resolved ids when possible
+  const allProfiles = [...leadershipTeam, ...teamMembers]
+  const mentorProfiles = resolvedMentors.map((resolved, idx) => 
+    resolved ? allProfiles.find((p) => p.id === resolved.id) : allProfiles.find((p) => p.name.toLowerCase() === mentors[idx]?.toLowerCase())
+  ).filter(Boolean)
+  const leadProfile = resolvedLead 
+    ? allProfiles.find((p) => p.id === resolvedLead.id) 
+    : (project.lead ? allProfiles.find((p) => p.name.toLowerCase() === (project.lead as string).toLowerCase()) : null) as typeof allProfiles[0] | undefined
+  const developerProfiles = resolvedDevelopers.map((resolved, idx) =>
+    resolved ? allProfiles.find((p) => p.id === resolved.id) : allProfiles.find((p) => p.name.toLowerCase() === developers[idx]?.toLowerCase())
+  ).filter(Boolean)
+
+  const [mentorDialogOpen, setMentorDialogOpen] = useState<number | null>(null)
+  const [leadDialogOpen, setLeadDialogOpen] = useState(false)
+  const [developerDialogOpen, setDeveloperDialogOpen] = useState<number | null>(null)
+  const [previewOpen, setPreviewOpen] = useState(false)
+  const [previewSrc, setPreviewSrc] = useState<string | null>(null)
+  const visuals = project.visuals || []
+
   const handleDownload = () => {
     const projectData = {
       ...project,
@@ -82,14 +116,210 @@ export function ResearchProjectDetail({ project }: Props) {
           <h1 className="text-3xl font-bold text-pretty">{project.title}</h1>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
-            <div className="flex items-center gap-2">
-              <Users className="h-4 w-4 text-muted-foreground" />
-              <span>Guide: {project.guide}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Users className="h-4 w-4 text-muted-foreground" />
-              <span>Lead: {project.lead}</span>
-            </div>
+            {/* Mentors */}
+            {mentors.length > 0 && mentors.map((mentor, idx) => {
+              const resolved = resolvedMentors[idx]
+              const profile = mentorProfiles[idx]
+              return (
+                <div key={idx} className="flex items-center gap-2">
+                  <HoverCard>
+                    <HoverCardTrigger asChild>
+                      <Avatar onClick={() => setMentorDialogOpen(idx)} className="h-5 w-5 cursor-pointer hover:ring-2 hover:ring-offset-2 hover:ring-blue-500 transition-all">
+                        <AvatarImage src={resolved?.image} alt={mentor} />
+                        <AvatarFallback>{mentor.split(" ").map((p: string) => p[0]).join("")}</AvatarFallback>
+                      </Avatar>
+                    </HoverCardTrigger>
+                    {profile && (
+                      <HoverCardContent side="right" align="start" className="w-80 p-4">
+                        <div className="flex items-start gap-4">
+                          <Avatar className="h-12 w-12">
+                            <AvatarImage src={profile.image} alt={profile.name} />
+                            <AvatarFallback>{profile.name.split(" ").map((p: string) => p[0]).join("")}</AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1">
+                            <h4 className="font-semibold text-sm">{profile.name}</h4>
+                            <p className="text-xs text-blue-600 mb-2">{profile.role}</p>
+                            <p className="text-xs text-muted-foreground line-clamp-3">{profile.bio}</p>
+                            <div className="mt-3 flex gap-2">
+                              {profile.linkedin && (
+                                <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline inline-flex items-center gap-1">
+                                  <ExternalLink className="h-3 w-3" /> LinkedIn
+                                </a>
+                              )}
+                              <Link href={profile ? `/about#${profile.id}` : "/about#leadership-team"} className="text-xs text-blue-600 hover:underline">Learn More</Link>
+                            </div>
+                          </div>
+                        </div>
+                      </HoverCardContent>
+                    )}
+                  </HoverCard>
+                  {profile && (
+                    <Dialog open={mentorDialogOpen === idx} onOpenChange={(open) => setMentorDialogOpen(open ? idx : null)}>
+                      <DialogContent>
+                        <div className="flex items-start gap-4">
+                          <Avatar className="h-12 w-12">
+                            <AvatarImage src={profile.image} alt={profile.name} />
+                            <AvatarFallback>{profile.name.split(" ").map((p: string) => p[0]).join("")}</AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1">
+                            <h4 className="font-semibold text-sm">{profile.name}</h4>
+                            <p className="text-xs text-blue-600 mb-2">{profile.role}</p>
+                            <p className="text-xs text-muted-foreground">{profile.bio}</p>
+                            <div className="mt-3 flex gap-2">
+                              {profile.linkedin && (
+                                <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline inline-flex items-center gap-1">
+                                  <ExternalLink className="h-3 w-3" /> LinkedIn
+                                </a>
+                              )}
+                              <Link href={profile ? `/about#${profile.id}` : "/about#leadership-team"} className="text-xs text-blue-600 hover:underline">Learn More</Link>
+                            </div>
+                          </div>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  )}
+                  <span>Mentor{mentors.length > 1 ? ` ${idx + 1}` : ''}: {resolved?.name || mentor}</span>
+                </div>
+              )
+            })}
+
+            {/* Lead */}
+            {project.lead && (
+              <div className="flex items-center gap-2">
+                <HoverCard>
+                  <HoverCardTrigger asChild>
+                    <Avatar onClick={() => setLeadDialogOpen(true)} className="h-5 w-5 cursor-pointer hover:ring-2 hover:ring-offset-2 hover:ring-blue-500 transition-all">
+                      <AvatarImage src={resolvedLead?.image} alt={project.lead} />
+                      <AvatarFallback>{project.lead.split(" ").map((p: string) => p[0]).join("")}</AvatarFallback>
+                    </Avatar>
+                  </HoverCardTrigger>
+                  {leadProfile && (
+                    <HoverCardContent side="right" align="start" className="w-80 p-4">
+                      <div className="flex items-start gap-4">
+                        <Avatar className="h-12 w-12">
+                          <AvatarImage src={leadProfile.image} alt={leadProfile.name} />
+                          <AvatarFallback>{leadProfile.name.split(" ").map((p: string) => p[0]).join("")}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-sm">{leadProfile.name}</h4>
+                          <p className="text-xs text-blue-600 mb-2">{leadProfile.role}</p>
+                          <p className="text-xs text-muted-foreground line-clamp-3">{leadProfile.bio}</p>
+                          <div className="mt-3 flex gap-2">
+                            {leadProfile.linkedin && (
+                              <a href={leadProfile.linkedin} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline inline-flex items-center gap-1">
+                                <ExternalLink className="h-3 w-3" /> LinkedIn
+                              </a>
+                            )}
+                            <Link href={leadProfile ? `/about#${leadProfile.id}` : "/about#team"} className="text-xs text-blue-600 hover:underline">Learn More</Link>
+                          </div>
+                        </div>
+                      </div>
+                    </HoverCardContent>
+                  )}
+                </HoverCard>
+                {leadProfile && (
+                  <Dialog open={leadDialogOpen} onOpenChange={setLeadDialogOpen}>
+                    <DialogContent>
+                      <div className="flex items-start gap-4">
+                        <Avatar className="h-12 w-12">
+                          <AvatarImage src={leadProfile.image} alt={leadProfile.name} />
+                          <AvatarFallback>{leadProfile.name.split(" ").map((p: string) => p[0]).join("")}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-sm">{leadProfile.name}</h4>
+                          <p className="text-xs text-blue-600 mb-2">{leadProfile.role}</p>
+                          <p className="text-xs text-muted-foreground">{leadProfile.bio}</p>
+                          <div className="mt-3 flex gap-2">
+                            {leadProfile.linkedin && (
+                              <a href={leadProfile.linkedin} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline inline-flex items-center gap-1">
+                                <ExternalLink className="h-3 w-3" /> LinkedIn
+                              </a>
+                            )}
+                            <Link href={leadProfile ? `/about#${leadProfile.id}` : "/about#team"} className="text-xs text-blue-600 hover:underline">Learn More</Link>
+                          </div>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                )}
+                <span>Lead: {resolvedLead?.name || project.lead}</span>
+              </div>
+            )}
+
+            {/* Developers */}
+            {developers.length > 0 && developers.map((developer, idx) => {
+              const resolved = resolvedDevelopers[idx]
+              const profile = developerProfiles[idx]
+              return (
+                <div key={idx} className="flex items-center gap-2">
+                  <HoverCard>
+                    <HoverCardTrigger asChild>
+                      <Avatar onClick={() => setDeveloperDialogOpen(idx)} className="h-5 w-5 cursor-pointer hover:ring-2 hover:ring-offset-2 hover:ring-blue-500 transition-all">
+                        <AvatarImage src={resolved?.image} alt={developer} />
+                        <AvatarFallback>{developer.split(" ").map((p: string) => p[0]).join("")}</AvatarFallback>
+                      </Avatar>
+                    </HoverCardTrigger>
+                    {profile && (
+                      <HoverCardContent side="right" align="start" className="w-80 p-4">
+                        <div className="flex items-start gap-4">
+                          <Avatar className="h-12 w-12">
+                            <AvatarImage src={profile.image} alt={profile.name} />
+                            <AvatarFallback>{profile.name.split(" ").map((p: string) => p[0]).join("")}</AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1">
+                            <h4 className="font-semibold text-sm">{profile.name}</h4>
+                            <p className="text-xs text-blue-600 mb-2">{profile.role}</p>
+                            <p className="text-xs text-muted-foreground line-clamp-3">{profile.bio}</p>
+                            <div className="mt-3 flex gap-2">
+                              {profile.linkedin && (
+                                <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline inline-flex items-center gap-1">
+                                  <ExternalLink className="h-3 w-3" /> LinkedIn
+                                </a>
+                              )}
+                              <Link href={profile ? `/about#${profile.id}` : "/about#team"} className="text-xs text-blue-600 hover:underline">Learn More</Link>
+                            </div>
+                          </div>
+                        </div>
+                      </HoverCardContent>
+                    )}
+                  </HoverCard>
+                  {profile && (
+                    <Dialog open={developerDialogOpen === idx} onOpenChange={(open) => setDeveloperDialogOpen(open ? idx : null)}>
+                      <DialogContent>
+                        <div className="flex items-start gap-4">
+                          <Avatar className="h-12 w-12">
+                            <AvatarImage src={profile.image} alt={profile.name} />
+                            <AvatarFallback>{profile.name.split(" ").map((p: string) => p[0]).join("")}</AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1">
+                            <h4 className="font-semibold text-sm">{profile.name}</h4>
+                            <p className="text-xs text-blue-600 mb-2">{profile.role}</p>
+                            <p className="text-xs text-muted-foreground">{profile.bio}</p>
+                            <div className="mt-3 flex gap-2">
+                              {profile.linkedin && (
+                                <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline inline-flex items-center gap-1">
+                                  <ExternalLink className="h-3 w-3" /> LinkedIn
+                                </a>
+                              )}
+                              <Link href={profile ? `/about#${profile.id}` : "/about#team"} className="text-xs text-blue-600 hover:underline">Learn More</Link>
+                            </div>
+                          </div>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  )}
+                  <span>Developer{developers.length > 1 ? ` ${idx + 1}` : ''}: {resolved?.name || developer}</span>
+                </div>
+              )
+            })}
+
+            {/* Team */}
+            {team.length > 0 && (
+              <div className="flex items-center gap-2">
+                <Users className="h-5 w-5 text-muted-foreground" />
+                <span>Team: {team.join(', ')}</span>
+              </div>
+            )}
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4 text-muted-foreground" />
               <span>Started: {new Date(project.startDate).toLocaleDateString()}</span>
@@ -246,6 +476,107 @@ export function ResearchProjectDetail({ project }: Props) {
 
         {/* Right Column - Sidebar */}
         <div className="space-y-6">
+          {/* Visuals / Project Snaps */}
+          {project.visuals && project.visuals.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Project Visuals</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {/* Primary large media */}
+                  <div className="w-full aspect-video overflow-hidden rounded-lg bg-gray-100">
+                    {visuals[0].type === 'video' ? (
+                      <video
+                        src={visuals[0].src}
+                        controls
+                        className="w-full h-full object-contain rounded-md"
+                      />
+                    ) : (
+                      <img
+                        src={visuals[0].src}
+                        alt={visuals[0].caption || project.title}
+                        className="w-full h-full object-contain rounded-md cursor-zoom-in hover:scale-105 transition-transform duration-300"
+                        onClick={() => {
+                          setPreviewSrc(visuals[0].src)
+                          setPreviewOpen(true)
+                        }}
+                      />
+                    )}
+                    {visuals[0].caption && (
+                      <div className="text-sm text-muted-foreground mt-3 px-1">
+                        {visuals[0].caption}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Thumbnails for remaining images */}
+                  {visuals.length > 1 && (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                      {visuals.slice(1).map((v, i) => (
+                        <div key={i} className="aspect-square relative overflow-hidden rounded-md bg-gray-100 group">
+                          {v.type === 'video' ? (
+                            <video
+                              src={v.src}
+                              className="w-full h-full object-cover cursor-pointer"
+                              onClick={() => {
+                                setPreviewSrc(v.src)
+                                setPreviewOpen(true)
+                              }}
+                            />
+                          ) : (
+                            <img
+                              src={v.src}
+                              alt={v.caption || `${project.title} snap ${i + 2}`}
+                              className="w-full h-full object-cover cursor-zoom-in hover:scale-105 transition-transform duration-300"
+                              onClick={() => {
+                                setPreviewSrc(v.src)
+                                setPreviewOpen(true)
+                              }}
+                            />
+                          )}
+                          {v.caption && (
+                            <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white p-2 text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                              {v.caption}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Preview dialog */}
+                  <Dialog open={!!previewOpen} onOpenChange={(open) => { if (!open) { setPreviewSrc(null); setPreviewOpen(false) } }}>
+                    <DialogContent className="max-w-4xl">
+                      <div className="relative w-full aspect-[4/3]">
+                        {previewSrc && (
+                          visuals.find(v => v.src === previewSrc)?.type === 'video' ? (
+                            <video 
+                              src={previewSrc}
+                              controls
+                              autoPlay
+                              className="w-full h-full object-contain bg-gray-100 rounded-lg"
+                            />
+                          ) : (
+                            <img 
+                              src={previewSrc} 
+                              alt={project.title} 
+                              className="w-full h-full object-contain bg-gray-100 rounded-lg"
+                            />
+                          )
+                        )}
+                      </div>
+                      {visuals.find(v => v.src === previewSrc)?.caption && (
+                        <div className="text-sm text-muted-foreground mt-2 text-center">
+                          {visuals.find(v => v.src === previewSrc)?.caption}
+                        </div>
+                      )}
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </CardContent>
+            </Card>
+          )}
           {/* Project Info */}
           <Card>
             <CardHeader>

@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
+import { cn } from "@/lib/utils"
 import Image from "next/image"
 import { ExternalLink, Mail, ChevronDown, ChevronUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -10,11 +11,32 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import AnimatedSection from "@/components/animated-section"
 import { leadershipTeam, type LeadershipProfile } from "@/lib/leadership-data"
 
-function LeadershipCard({ profile }: { profile: LeadershipProfile }) {
+function LeadershipCard({ profile, highlighted }: { profile: LeadershipProfile; highlighted?: boolean }) {
   const [expanded, setExpanded] = useState(false)
+  const [pulse, setPulse] = useState(false)
+  const ref = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    if (highlighted && ref.current) {
+      // scroll into view and pulse
+      try {
+        ref.current.scrollIntoView({ behavior: "smooth", block: "center" })
+      } catch {}
+      setPulse(true)
+      const t = setTimeout(() => setPulse(false), 3500)
+      return () => clearTimeout(t)
+    }
+  }, [highlighted])
 
   return (
-    <Card className="group transition-all duration-300 hover:shadow-lg">
+    <Card
+      id={profile.id}
+      ref={ref}
+      className={cn(
+        "group transition-all duration-300 hover:shadow-lg",
+        pulse ? "ring-2 ring-blue-400 bg-blue-50" : ""
+      )}
+    >
       <CardHeader className="pb-4">
         <div className="flex flex-col items-center text-center">
           <div className="relative mb-4 h-32 w-32 overflow-hidden rounded-full">
@@ -154,6 +176,15 @@ function LeadershipCard({ profile }: { profile: LeadershipProfile }) {
 }
 
 export function AboutLeadership() {
+  const [hash, setHash] = useState<string | null>(null)
+
+  useEffect(() => {
+    const setCurrent = () => setHash(window.location.hash.replace("#", "") || null)
+    setCurrent()
+    window.addEventListener("hashchange", setCurrent)
+    return () => window.removeEventListener("hashchange", setCurrent)
+  }, [])
+
   return (
     <AnimatedSection className="mx-auto max-w-6xl px-4">
       <div className="mb-8 text-center">
@@ -166,7 +197,7 @@ export function AboutLeadership() {
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
         {leadershipTeam.slice(0, 6).map((profile) => (
-          <LeadershipCard key={profile.id} profile={profile} />
+          <LeadershipCard key={profile.id} profile={profile} highlighted={hash === profile.id} />
         ))}
       </div>
 

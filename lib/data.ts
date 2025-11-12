@@ -40,6 +40,11 @@ export const startups = [
 
 export const partners = [
   {
+    name: "IIT Kharagpur",
+    image: "/IIT_Kharagpur_Logo.svg.png",
+  },
+  
+  {
     name: "Startup India",
     image: "/startup_India.png",
   },

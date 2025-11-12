@@ -14,6 +14,10 @@ import {
 } from "@/components/ui/dialog"
 import { useState, useEffect } from "react"
 import { Play, ExternalLink, Users } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import DownloadButton from "@/components/download-button"
+import { getProjectDownloadUrl } from "@/lib/downloads"
+import { findPersonByName } from "@/lib/people"
 
 type Props = {
   startup: {
@@ -39,6 +43,8 @@ export function StartupCard({ startup }: Props) {
   const isOngoing = startup.status === "ongoing"
   const statusColor = isOngoing ? "bg-blue-600 text-white" : "bg-emerald-600 text-white"
   const borderColor = isOngoing ? "border-blue-600" : "border-emerald-600"
+  const resolvedGuide = findPersonByName(startup.guide)
+  const resolvedLead = findPersonByName(startup.lead)
 
   const [imageIndex, setImageIndex] = useState(0)
   const [isHovered, setIsHovered] = useState(false)
@@ -112,6 +118,15 @@ export function StartupCard({ startup }: Props) {
             {isOngoing ? "Ongoing" : "Established"}
           </Badge>
         </div>
+        {resolvedGuide ? (
+          <div className="absolute top-3 left-3 z-20 bg-white/90 backdrop-blur px-2 py-1 rounded-md shadow-sm flex items-center gap-2">
+            <Avatar className="h-6 w-6">
+              <AvatarImage src={resolvedGuide.image} alt={resolvedGuide.name} />
+              <AvatarFallback>{resolvedGuide.name.split(" ").map((p) => p[0]).slice(0,2).join("")}</AvatarFallback>
+            </Avatar>
+            <span className="text-xs text-gray-800">{resolvedGuide.name}</span>
+          </div>
+        ) : null}
       </div>
 
       <CardHeader className="space-y-3 pb-3">
@@ -155,11 +170,11 @@ export function StartupCard({ startup }: Props) {
         <div className="grid grid-cols-1 gap-2 text-sm">
           <div className="flex items-center gap-2">
             <span className="font-medium text-foreground min-w-0">Guide:</span>
-            <span className="text-muted-foreground truncate">{startup.guide}</span>
+            <span className="text-muted-foreground truncate">{resolvedGuide?.name || startup.guide}</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="font-medium text-foreground min-w-0">Lead:</span>
-            <span className="text-muted-foreground truncate">{startup.lead}</span>
+            <span className="text-muted-foreground truncate">{resolvedLead?.name || startup.lead}</span>
           </div>
         </div>
 
@@ -235,6 +250,10 @@ export function StartupCard({ startup }: Props) {
             )}
           </div>
         )}
+
+        <div className="grid grid-cols-1 gap-2 pt-2">
+          <DownloadButton href={getProjectDownloadUrl("startup", startup.id)} />
+        </div>
 
         {/* Team members */}
         <div className="border-t pt-3">

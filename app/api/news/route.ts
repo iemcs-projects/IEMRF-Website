@@ -3,22 +3,28 @@ import { NextResponse } from "next/server"
 export async function GET() {
   const news = [
     {
-      id: "n1",
-      title: "IEMRF Launches Entrepreneurship Bootcamp Cohort",
-      date: "2025-09-01",
-      summary: "Applications open for the next cohort focused on research-to-market pathways.",
+      id: "winter-internship",
+      title: "Winter Internship 2025 Is Open — Apply Now",
+      date: "2025-12-01",
+      summary: "Our flagship winter internship is accepting applications. Secure your spot to work with mentors across AI, IoT, and product innovation.",
     },
     {
-      id: "n2",
-      title: "Partnership with TechCorp Labs",
-      date: "2025-08-20",
-      summary: "New collaboration to support startup pilots and technology validation.",
+      id: "iit-collaboration",
+      title: "IEMRF Partners with IIT Kharagpur for Research Collaboration",
+      date: "2025-11-10",
+      summary: "A strategic partnership to accelerate joint research labs, co-supervised projects, and advanced technology pilots.",
     },
     {
-      id: "n3",
-      title: "Innovation Grant Awardees Announced",
-      date: "2025-08-05",
-      summary: "Five early-stage teams selected for prototype development grants.",
+      id: "interns-completed",
+      title: "70+ Interns Completed Their Internships with IEMRF",
+      date: "2025-10-25",
+      summary: "Our interns delivered prototypes, published papers, and launched startups during the recent internship cycles.",
+    },
+    {
+      id: "summer-internship",
+      title: "Summer Internship 2026 Applications Now Open",
+      date: "2025-09-15",
+      summary: "Early applications are open for the summer internship focused on research commercialization and product engineering.",
     },
   ]
   return NextResponse.json({ news })

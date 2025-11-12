@@ -84,18 +84,22 @@ export function InternshipContent() {
         {[{
           label: "Interns Completed",
           value: data.summary.totalInterns,
+          suffix: "+",
           colors: ["#3b82f6", "#93c5fd"],
         }, {
           label: "Student Teams",
           value: data.summary.teams,
+          suffix: "+",
           colors: ["#10b981", "#6ee7b7"],
         }, {
           label: "Mentors",
           value: data.summary.mentors,
+          suffix: "+",
           colors: ["#8b5cf6", "#d8b4fe"],
         }, {
           label: "Domains",
           value: data.summary.domains,
+          suffix: "+",
           colors: ["#f59e0b", "#fde68a"],
         }].map((kpi, i) => (
           <Card key={i} className="overflow-hidden">
@@ -111,6 +115,7 @@ export function InternshipContent() {
                 }}
               >
                 <CountUp value={kpi.value} />
+                {kpi.suffix && <span className="ml-1 text-2xl">{kpi.suffix}</span>}
               </p>
               <span
                 className="pointer-events-none absolute inset-0 rounded-lg"
@@ -156,10 +161,9 @@ export function InternshipContent() {
       {/* Charts */}
       <div className="mt-8">
         <InternshipCharts
-          domainCounts={derivedDomainCounts}
+          domainCounts={data.domainCounts}
           totalInterns={data.summary.totalInterns}
         />
-        <p className="mt-2 text-xs text-gray-600">Charts reflect current filters.</p>
       </div>
 
       {/* Projects Grid */}

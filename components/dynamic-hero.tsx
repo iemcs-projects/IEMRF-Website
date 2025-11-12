@@ -149,15 +149,30 @@ export default function DynamicHero() {
         </div>
 
         {/* Partnership Highlights - Top Right */}
-        <div className="absolute top-6 right-6 lg:right-10 z-10 flex flex-col gap-3">
-          <div className="bg-white/90 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg border border-white/20 animate-pulse-slow">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-xs font-semibold text-gray-800">Startup India</span>
+        <div className="absolute top-6 right-6 lg:right-10 z-10 flex flex-col items-end gap-3">
+          <div className="flex flex-wrap justify-end gap-3">
+            <div className="bg-white/90 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg border border-white/20 animate-pulse-slow">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="text-xs font-semibold text-gray-800 whitespace-nowrap">Startup India</span>
+              </div>
+              <p className="text-xs text-gray-600 mt-1">Recognized Partner</p>
             </div>
-            <p className="text-xs text-gray-600 mt-1">Recognized Partner</p>
+            <div
+              className="bg-white/90 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg border border-white/20 animate-pulse-slow flex-shrink-0"
+              style={{ animationDelay: "0.5s" }}
+            >
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                <span className="text-xs font-semibold text-gray-800 whitespace-nowrap">IIT Kharagpur</span>
+              </div>
+              <p className="text-xs text-gray-600 mt-1">Strategic Academic Partner</p>
+            </div>
           </div>
-          <div className="bg-white/90 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg border border-white/20 animate-pulse-slow" style={{ animationDelay: '0.5s' }}>
+          <div
+            className="bg-white/90 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg border border-white/20 animate-pulse-slow flex-shrink-0"
+            style={{ animationDelay: "0.5s" }}
+          >
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
               <span className="text-xs font-semibold text-gray-800">MSME</span>

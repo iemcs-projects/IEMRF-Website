@@ -17,7 +17,7 @@ type ApiResponse = {
     completedCount: number
     areasCount: { area: string; count: number }[]
   }
-  areas: { id: string; name: string; description: string }[]
+  areas: { id: string; name: string; description: string; projectAreas: string[] }[]
   projects: {
     ongoing: any[]
     completed: any[]
@@ -33,7 +33,10 @@ export default function ResearchContent() {
   const [area, setArea] = useState<string>("all")
 
   const filterFn = (p: any) => {
-    const matchesArea = area === "all" || p.area === area
+    const matchesArea = area === "all" || 
+      data?.areas.find(a => a.name === area)?.projectAreas.some(pa => 
+        p.area.toLowerCase().includes(pa.toLowerCase())
+      ) || false
     const q = query.trim().toLowerCase()
     const matchesQuery =
       !q ||
@@ -123,11 +126,21 @@ export default function ResearchContent() {
       </div>
 
       {/* Projects */}
-      <Tabs defaultValue="ongoing" className="w-full">
-        <TabsList className="grid grid-cols-2 w-full sm:w-auto">
+      <Tabs defaultValue="all" className="w-full">
+        <TabsList className="grid grid-cols-3 w-full sm:w-auto">
+          <TabsTrigger value="all">All</TabsTrigger>
           <TabsTrigger value="ongoing">Ongoing</TabsTrigger>
           <TabsTrigger value="completed">Completed</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="all" className="mt-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            {[...(data?.projects.ongoing || []), ...(data?.projects.completed || [])].filter(filterFn).map((p: any) => (
+              <ResearchCard key={p.id} project={p} />
+            ))}
+          </div>
+          {!((data?.projects.ongoing || []).length + (data?.projects.completed || []).length) && <div className="text-sm text-muted-foreground mt-4">No projects found.</div>}
+        </TabsContent>
 
         <TabsContent value="ongoing" className="mt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -148,15 +161,7 @@ export default function ResearchContent() {
         </TabsContent>
       </Tabs>
 
-      {/* Publications */}
-      <div className="space-y-3">
-        <h2 className="text-xl font-semibold">Publications</h2>
-        <ul className="divide-y rounded-md border">
-          {(data?.publications || []).map((pub: any) => (
-            <PublicationItem key={pub.id} pub={pub} />
-          ))}
-        </ul>
-      </div>
+      {/* Publications section hidden */}
     </section>
   )
 }

@@ -5,6 +5,10 @@ import Link from "next/link"
 import type { Program } from "@/lib/programs-data"
 import { cn } from "@/lib/utils"
 import { useState, useEffect } from "react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import DownloadButton from "@/components/download-button"
+import { getProjectDownloadUrl } from "@/lib/downloads"
+import { findPersonByName } from "@/lib/people"
 
 const categoryColor: Record<Program["category"], string> = {
   Incubation: "border-emerald-500",
@@ -17,6 +21,7 @@ const categoryColor: Record<Program["category"], string> = {
 export function ProgramCard({ program, floatDelay = 0 }: { program: Program; floatDelay?: number }) {
   const [imageIndex, setImageIndex] = useState(0)
   const [isHovered, setIsHovered] = useState(false)
+  const resolvedMentor = findPersonByName(program.mentor)
 
   const dynamicImages = [
     program.image || "/placeholder.svg",
@@ -84,6 +89,16 @@ export function ProgramCard({ program, floatDelay = 0 }: { program: Program; flo
             />
           ))}
         </div>
+
+        {resolvedMentor && program.id !== "p-res-01" ? (
+          <div className="absolute top-2 left-2 z-20 bg-white/90 backdrop-blur px-2 py-1 rounded-md shadow-sm flex items-center gap-2">
+            <Avatar className="h-6 w-6">
+              <AvatarImage src={resolvedMentor.image} alt={resolvedMentor.name} />
+              <AvatarFallback>{resolvedMentor.name.split(" ").map((p) => p[0]).slice(0,2).join("")}</AvatarFallback>
+            </Avatar>
+            <span className="text-xs text-gray-800">{resolvedMentor.name}</span>
+          </div>
+        ) : null}
 
         {isHovered && (
           <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-1 z-20">
@@ -164,6 +179,10 @@ export function ProgramCard({ program, floatDelay = 0 }: { program: Program; flo
               <span className="transform group-hover:translate-x-1 transition-transform duration-200">→</span>
               <span className="sr-only"> about {program.title}</span>
             </Link>
+          </div>
+
+          <div className="mt-3 grid grid-cols-1 gap-2">
+            <DownloadButton href={getProjectDownloadUrl("program", program.id)} />
           </div>
         </div>
       </div>

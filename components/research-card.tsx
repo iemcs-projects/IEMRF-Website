@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import type { ResearchProject } from "@/lib/research-data"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
+import { findPersonByName } from "@/lib/people"
 
 type Props = {
   project: ResearchProject
@@ -18,6 +19,29 @@ const statusColor: Record<ResearchProject["status"], string> = {
 }
 
 export function ResearchCard({ project }: Props) {
+  const mentors = project.mentor || []
+  const firstMentor = mentors.length > 0 ? findPersonByName(mentors[0]) : null
+  const resolvedLead = project.lead ? findPersonByName(project.lead) : null
+  
+  const projectInfo: string[] = []
+  if (mentors.length > 0) {
+    const mentorNames = mentors.map(m => {
+      const resolved = findPersonByName(m)
+      return resolved?.name || m
+    })
+    projectInfo.push(`Mentor${mentors.length > 1 ? 's' : ''}: ${mentorNames.join(', ')}`)
+  }
+  if (project.lead) {
+    projectInfo.push(`Lead: ${resolvedLead?.name || project.lead}`)
+  }
+  if (project.developer) {
+    const developers = Array.isArray(project.developer) ? project.developer : [project.developer]
+    projectInfo.push(`Developer${developers.length > 1 ? 's' : ''}: ${developers.join(', ')}`)
+  }
+  if (project.team && project.team.length > 0) {
+    projectInfo.push(`Team: ${project.team.join(', ')}`)
+  }
+
   return (
     <Card className="h-full flex flex-col">
       {project.image && (
@@ -40,19 +64,21 @@ export function ResearchCard({ project }: Props) {
           </Badge>
         </div>
         <CardTitle className="text-pretty">{project.title}</CardTitle>
-        <div className="text-sm text-muted-foreground">
-          Guide: {project.guide} · Lead: {project.lead}
-        </div>
+        {projectInfo.length > 0 && (
+          <div className="text-sm text-muted-foreground">
+            {projectInfo.join(' · ')}
+          </div>
+        )}
       </CardHeader>
 
       <CardContent className="space-y-3 flex-1 flex flex-col">
-        <p className="text-sm leading-relaxed">{project.overview}</p>
+        <p className="text-sm leading-relaxed">{project.overview.replace(/design doc|prototype/gi, "")}</p>
         {project.keyFindings?.length ? (
           <div>
             <div className="text-sm font-medium mb-1">Key findings</div>
             <ul className="list-disc pl-5 text-sm space-y-1">
               {project.keyFindings.slice(0, 2).map((k, i) => (
-                <li key={i}>{k}</li>
+                <li key={i}>{k.replace(/design doc|prototype/gi, "")}</li>
               ))}
               {project.keyFindings.length > 2 && (
                 <li className="text-muted-foreground">+{project.keyFindings.length - 2} more findings</li>
@@ -76,7 +102,7 @@ export function ResearchCard({ project }: Props) {
                 rel="noreferrer"
                 className="text-xs px-2 py-1 rounded-md bg-blue-700 text-white hover:bg-blue-800 transition-colors"
               >
-                {l.label}
+                {l.label.replace(/design doc|prototype/gi, "")}
               </a>
             ))}
           </div>
@@ -84,7 +110,7 @@ export function ResearchCard({ project }: Props) {
 
         <div className="mt-auto pt-4">
           <Link href={`/research/${project.id}`}>
-            <Button variant="outline" size="sm" className="w-full bg-transparent">
+            <Button variant="default" size="sm" className="w-full font-semibold ring-2 ring-blue-500 ring-offset-2">
               Read More
             </Button>
           </Link>

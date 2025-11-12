@@ -35,9 +35,12 @@ export function InternshipCharts({
     "Web": "#10b981", // Emerald
     "IoT": "#8b5cf6", // Purple
     "BusinessAnalytics": "#f59e0b", // Amber
+    "Analytics": "#f59e0b", // Amber
     "HealthTech": "#ef4444", // Red
+    "Healthcare": "#ef4444", // Red
     "Data Science": "#06b6d4", // Cyan
     "FinTech": "#84cc16", // Lime
+    "Blockchain": "#f97316", // Orange
   }
 
   const getDomainColor = (domain: string): string => {
@@ -46,11 +49,11 @@ export function InternshipCharts({
 
   return (
     <div className="grid gap-6 md:grid-cols-2">
-      <div className="h-72 rounded border bg-card p-4">
+      <div className="h-80 rounded border bg-card p-4">
         <h3 className="text-sm font-medium text-gray-900">Interns by Domain</h3>
         <div className="mt-2 h-[85%]">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={domainCounts} margin={{ top: 8, right: 16, left: 0, bottom: 8 }}>
+            <BarChart data={domainCounts} margin={{ top: 8, right: 16, left: 0, bottom: 50 }}>
               <defs>
                 {domainCounts.map((d, i) => {
                   const base = getDomainColor(d.domain)
@@ -69,8 +72,16 @@ export function InternshipCharts({
                 })}
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-              <XAxis dataKey="domain" fontSize={12} />
-              <YAxis allowDecimals={false} fontSize={12} />
+              <XAxis 
+                dataKey="domain" 
+                fontSize={11} 
+                angle={-30}
+                textAnchor="end"
+                height={70}
+                interval={0}
+                tick={{ fill: '#374151' }}
+              />
+              <YAxis allowDecimals={false} fontSize={12} domain={[0, 20]} />
               <Tooltip cursor={{ fill: "rgba(59,130,246,0.05)" }} formatter={(value: any, _name, props: any) => [value, props?.payload?.domain]} />
               <Legend />
               <InteractiveBars data={domainCounts} getDomainColor={getDomainColor} />
@@ -79,7 +90,7 @@ export function InternshipCharts({
         </div>
       </div>
 
-      <div className="h-72 rounded border bg-card p-4">
+      <div className="h-80 rounded border bg-card p-4">
         <h3 className="text-sm font-medium text-gray-900">Completion Status</h3>
         <div className="mt-2 h-[85%]">
           <ResponsiveContainer width="100%" height="100%">

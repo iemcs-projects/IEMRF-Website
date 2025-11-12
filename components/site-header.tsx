@@ -53,16 +53,8 @@ export function SiteHeader() {
 
         <div className="hidden md:flex items-center gap-3" aria-label="Primary">
           <Link href="/" className="rounded px-3 py-2 text-sm text-gray-200 hover:text-white hover:bg-gray-800">Home</Link>
-          {/* About dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger className={`rounded px-3 py-2 text-sm ${['/about','/partners','/gallery','/news'].includes(pathname) ? 'bg-gray-800 text-white' : 'text-gray-200 hover:text-white hover:bg-gray-800'}`}>About</DropdownMenuTrigger>
-            <DropdownMenuContent className="mt-2 w-56 rounded-md border bg-white p-2 text-gray-900">
-              <Link href="/about" className={`block rounded px-3 py-2 text-sm ${pathname==='/about' ? 'bg-gray-100 text-gray-900' : 'hover:bg-gray-100'}`}>About IEMRF</Link>
-              <Link href="/partners" className={`block rounded px-3 py-2 text-sm ${pathname==='/partners' ? 'bg-gray-100 text-gray-900' : 'hover:bg-gray-100'}`}>Partners</Link>
-              <Link href="/gallery" className={`block rounded px-3 py-2 text-sm ${pathname==='/gallery' ? 'bg-gray-100 text-gray-900' : 'hover:bg-gray-100'}`}>Gallery</Link>
-              <Link href="/news" className={`block rounded px-3 py-2 text-sm ${pathname==='/news' ? 'bg-gray-100 text-gray-900' : 'hover:bg-gray-100'}`}>News</Link>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {/* About - direct link (no dropdown) */}
+          <Link href="/about" className={`rounded px-3 py-2 text-sm ${pathname==='/about' ? 'bg-gray-800 text-white' : 'text-gray-200 hover:text-white hover:bg-gray-800'}`}>About</Link>
 
           {/* Programs dropdown */}
           <DropdownMenu>
@@ -75,13 +67,20 @@ export function SiteHeader() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Community dropdown */}
+          {/* Startups - top-level and placed beside Programs */}
+          <Link href="/startups" className={`rounded px-3 py-2 text-sm ${pathname==='/startups' ? 'bg-gray-800 text-white' : 'text-gray-200 hover:text-white hover:bg-gray-800'}`}>Startups</Link>
+
+          {/* Partners - top-level and placed beside Programs */}
+          <Link href="/partners" className={`rounded px-3 py-2 text-sm ${pathname==='/partners' ? 'bg-gray-800 text-white' : 'text-gray-200 hover:text-white hover:bg-gray-800'}`}>Partners</Link>
+
+          {/* Community dropdown (Gallery and News moved here) */}
           <DropdownMenu>
-            <DropdownMenuTrigger className={`rounded px-3 py-2 text-sm ${['/events','/startups','/blog'].includes(pathname) ? 'bg-gray-800 text-white' : 'text-gray-200 hover:text-white hover:bg-gray-800'}`}>Community</DropdownMenuTrigger>
+            <DropdownMenuTrigger className={`rounded px-3 py-2 text-sm ${['/events','/blog','/gallery','/news'].includes(pathname) ? 'bg-gray-800 text-white' : 'text-gray-200 hover:text-white hover:bg-gray-800'}`}>Community</DropdownMenuTrigger>
             <DropdownMenuContent className="mt-2 w-56 rounded-md border bg-white p-2 text-gray-900">
               <Link href="/events" className={`block rounded px-3 py-2 text-sm ${pathname==='/events' ? 'bg-gray-100 text-gray-900' : 'hover:bg-gray-100'}`}>Events</Link>
-              <Link href="/startups" className={`block rounded px-3 py-2 text-sm ${pathname==='/startups' ? 'bg-gray-100 text-gray-900' : 'hover:bg-gray-100'}`}>Startups</Link>
               <Link href="/blog" className={`block rounded px-3 py-2 text-sm ${pathname==='/blog' ? 'bg-gray-100 text-gray-900' : 'hover:bg-gray-100'}`}>Blog</Link>
+              <Link href="/gallery" className={`block rounded px-3 py-2 text-sm ${pathname==='/gallery' ? 'bg-gray-100 text-gray-900' : 'hover:bg-gray-100'}`}>Gallery</Link>
+              <Link href="/news" className={`block rounded px-3 py-2 text-sm ${pathname==='/news' ? 'bg-gray-100 text-gray-900' : 'hover:bg-gray-100'}`}>News</Link>
             </DropdownMenuContent>
           </DropdownMenu>
 

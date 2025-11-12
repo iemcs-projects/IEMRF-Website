@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
+import { cn } from "@/lib/utils"
 import Image from "next/image"
 import { ExternalLink, ChevronDown, ChevronUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -8,11 +9,28 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import AnimatedSection from "@/components/animated-section"
 import { teamMembers, type TeamProfile } from "@/lib/team-data"
 
-function TeamCard({ profile }: { profile: TeamProfile }) {
+function TeamCard({ profile, highlighted }: { profile: TeamProfile; highlighted?: boolean }) {
   const [expanded, setExpanded] = useState(false)
+  const [pulse, setPulse] = useState(false)
+  const ref = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    if (highlighted && ref.current) {
+      try {
+        ref.current.scrollIntoView({ behavior: "smooth", block: "center" })
+      } catch {}
+      setPulse(true)
+      const t = setTimeout(() => setPulse(false), 3500)
+      return () => clearTimeout(t)
+    }
+  }, [highlighted])
 
   return (
-    <Card className="group transition-all duration-300 hover:shadow-lg">
+    <Card
+      id={profile.id}
+      ref={ref}
+      className={cn("group transition-all duration-300 hover:shadow-lg", pulse ? "ring-2 ring-blue-400 bg-blue-50" : "")}
+    >
       <CardHeader className="pb-4">
         <div className="flex flex-col items-center text-center">
           <div className="relative mb-4 h-32 w-32 overflow-hidden rounded-full">
@@ -66,6 +84,15 @@ function TeamCard({ profile }: { profile: TeamProfile }) {
 }
 
 export function AboutTeam() {
+  const [hash, setHash] = useState<string | null>(null)
+
+  useEffect(() => {
+    const setCurrent = () => setHash(window.location.hash.replace("#", "") || null)
+    setCurrent()
+    window.addEventListener("hashchange", setCurrent)
+    return () => window.removeEventListener("hashchange", setCurrent)
+  }, [])
+
   return (
     <AnimatedSection className="mx-auto max-w-6xl px-4">
       <div className="mb-8 text-center">
@@ -77,7 +104,7 @@ export function AboutTeam() {
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
         {teamMembers.map((profile) => (
-          <TeamCard key={profile.id} profile={profile} />
+          <TeamCard key={profile.id} profile={profile} highlighted={hash === profile.id} />
         ))}
       </div>
 

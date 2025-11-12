@@ -13,8 +13,9 @@ export default function HomePage() {
       <SiteHeader />
       <DynamicHero />
       <ScrollingBanner
-        text="Over seventy IEMRF students successfully completed their summer internships—contributing to real-world research, building prototypes, and collaborating with mentors and startup founders to turn ideas into impact."
-        speedSeconds={26}
+        text="Apply for Winter Internship 2025 🚀| Applications are open now! | Gain Real Industrial Experience & Build Your Future Today! 🔧✨"
+        speedSeconds={24}
+        href="/news#winter-internship"
       />
 
       <section className="mx-auto max-w-6xl px-4 py-12">
@@ -33,10 +34,10 @@ export default function HomePage() {
           <div className="text-center">
             <Metrics
               items={[
-                { label: "Programs & Initiatives", value: 12 },
-                { label: "Startups Supported", value: 85, suffix: "+" },
-                { label: "Partnerships", value: 25, suffix: "+" },
-                { label: "Years of Impact", value: 10, suffix: "+" },
+                { label: "Programs & Initiatives", value: 5, suffix: "+" },
+                { label: "Research Projects", value: 10, suffix: "+" },
+                { label: "Partners", value: 5, suffix: "+" },
+                { label: "Interns", value: 70, suffix: "+" },
               ]}
             />
           </div>
@@ -77,8 +78,19 @@ export default function HomePage() {
             <p className="text-gray-600 mb-8 max-w-2xl mx-auto">Collaborating with leading organizations to drive innovation and create impact.</p>
             <div className="grid items-center justify-items-center gap-8 sm:grid-cols-2 md:grid-cols-4">
               {partners.map((p) => (
-                <div key={p.name} className="flex size-28 items-center justify-center rounded-xl border bg-white shadow-sm hover:shadow-md transition-shadow duration-300">
-                  <img src={p.image || "/placeholder.svg"} alt={`${p.name} logo`} className="max-h-16 max-w-16 object-contain" />
+                <div
+                  key={p.name}
+                  className="group relative flex size-28 items-center justify-center rounded-xl border bg-white shadow-sm transition duration-300 hover:shadow-md"
+                >
+                  <img
+                    src={p.image || "/placeholder.svg"}
+                    alt={`${p.name} logo`}
+                    className="max-h-16 max-w-16 object-contain"
+                    title={p.name}
+                  />
+                  <span className="pointer-events-none absolute bottom-2 left-1/2 -translate-x-1/2 rounded-md bg-blue-700/90 px-2 py-1 text-xs font-medium text-white opacity-0 shadow-md transition duration-200 group-hover:-translate-y-1 group-hover:opacity-100">
+                    {p.name}
+                  </span>
                 </div>
               ))}
             </div>

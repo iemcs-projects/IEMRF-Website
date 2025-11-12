@@ -1,5 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import type { InternshipProject } from "@/lib/internship-data"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import DownloadButton from "@/components/download-button"
+import { getProjectDownloadUrl } from "@/lib/downloads"
+import { findPersonByName } from "@/lib/people"
+import { useMentorContext, getProjectKey } from "@/components/mentor-provider"
+import { Users } from "lucide-react"
 
 function colorForDomain(domain: string) {
   const map: Record<string, string> = {
@@ -15,6 +21,13 @@ function colorForDomain(domain: string) {
 
 export function InternshipProjectCard({ project }: { project: InternshipProject }) {
   const badgeColor = colorForDomain(project.domain)
+  const { assignments } = useMentorContext()
+  const projectKey = getProjectKey("internship", project.id)
+  const projectAssignment = assignments[projectKey] || {}
+  const resolvedMentor = projectAssignment.mentor
+  const resolvedLead = projectAssignment.lead
+  const resolvedGuide = projectAssignment.guide
+  
   return (
     <Card
       className="h-full transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-lg"
@@ -43,6 +56,35 @@ export function InternshipProjectCard({ project }: { project: InternshipProject 
             }}
           />
           <span className="pointer-events-none absolute inset-0 ring-1 ring-black/5" aria-hidden="true" />
+          <div className="absolute top-2 left-2 z-10 space-y-1">
+            {resolvedGuide && (
+              <div className="bg-white/90 backdrop-blur px-2 py-1 rounded-md shadow-sm flex items-center gap-2">
+                <Avatar className="h-6 w-6">
+                  <AvatarImage src={resolvedGuide.image} alt={resolvedGuide.name} />
+                  <AvatarFallback>{resolvedGuide.name.split(" ").map((p) => p[0]).slice(0,2).join("")}</AvatarFallback>
+                </Avatar>
+                <span className="text-xs text-gray-800"><span className="font-medium">Guide:</span> {resolvedGuide.name}</span>
+              </div>
+            )}
+            {resolvedLead && (
+              <div className="bg-white/90 backdrop-blur px-2 py-1 rounded-md shadow-sm flex items-center gap-2">
+                <Avatar className="h-6 w-6">
+                  <AvatarImage src={resolvedLead.image} alt={resolvedLead.name} />
+                  <AvatarFallback>{resolvedLead.name.split(" ").map((p) => p[0]).slice(0,2).join("")}</AvatarFallback>
+                </Avatar>
+                <span className="text-xs text-gray-800"><span className="font-medium">Lead:</span> {resolvedLead.name}</span>
+              </div>
+            )}
+            {resolvedMentor && (
+              <div className="bg-white/90 backdrop-blur px-2 py-1 rounded-md shadow-sm flex items-center gap-2">
+                <Avatar className="h-6 w-6">
+                  <AvatarImage src={resolvedMentor.image} alt={resolvedMentor.name} />
+                  <AvatarFallback>{resolvedMentor.name.split(" ").map((p) => p[0]).slice(0,2).join("")}</AvatarFallback>
+                </Avatar>
+                <span className="text-xs text-gray-800"><span className="font-medium">Mentor:</span> {resolvedMentor.name}</span>
+              </div>
+            )}
+          </div>
         </div>
         <div className="text-sm text-gray-600">
           <p>
@@ -50,6 +92,9 @@ export function InternshipProjectCard({ project }: { project: InternshipProject 
           </p>
         </div>
         <p className="text-sm leading-6 text-gray-600">{project.description}</p>
+        <div className="grid grid-cols-1 gap-2 pt-1">
+          <DownloadButton href={getProjectDownloadUrl("internship", project.id)} />
+        </div>
       </CardContent>
     </Card>
   )

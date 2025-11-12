@@ -3,16 +3,13 @@ import { SiteFooter } from "@/components/site-footer"
 import { AnimatedSection } from "@/components/animated-section"
 
 const images = [
-  "/student-ai-project.png",
-  "/student-web-project.png",
-  "/student-iot-health.png",
-  "/student-iot-energy.png",
-  "/student-logistics-ai.png",
-  "/research-lab-team.png",
-  "/workshop-prototyping-team.png",
-  "/startup-bootcamp-session.png",
-  "/innovation-workshop.png",
-  "/team-incubation-workspace.png",
+  "/g1.jpg",
+  "/g2.jpg",
+  "/g3.jpg",
+  "/g4.jpg",
+  "/g5.jpg",
+  "/g6.jpg",
+ 
 ]
 
 export default function GalleryPage() {

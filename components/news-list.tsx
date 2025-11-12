@@ -34,20 +34,25 @@ export function NewsList() {
     <>
       <ul className="space-y-5">
         {data.news.map((n, index) => {
-          const paletteIndex = index % 3
+          const isCurrent = index === 0
+          const paletteIndex = isCurrent ? 0 : index % 3
           const isBlue = paletteIndex === 0
           const isEmerald = paletteIndex === 1
           const isPurple = paletteIndex === 2
-          const accent = isBlue ? "#3b82f6" : isEmerald ? "#10b981" : "#8b5cf6"
-          const accentSoft = isBlue ? "#93c5fd" : isEmerald ? "#6ee7b7" : "#d8b4fe"
-          const gradient = isBlue
+          const accent = isCurrent ? "#f97316" : isBlue ? "#3b82f6" : isEmerald ? "#10b981" : "#8b5cf6"
+          const accentSoft = isCurrent ? "#fdba74" : isBlue ? "#93c5fd" : isEmerald ? "#6ee7b7" : "#d8b4fe"
+          const gradient = isCurrent
+            ? "linear-gradient(135deg, #fff7ed 0%, #fed7aa 35%, #fff5eb 100%)"
+            : isBlue
             ? "linear-gradient(135deg, #fff 0%, #dbeafe 35%, #eff6ff 100%)"
             : isEmerald
             ? "linear-gradient(135deg, #fff 0%, #d1fae5 35%, #ecfeff 100%)"
             : "linear-gradient(135deg, #fff 0%, #ede9fe 35%, #f5f3ff 100%)"
+          const blinkClass = isCurrent ? "animate-blink-fast" : "animate-blink"
           return (
             <li
               key={n.id}
+              id={n.id}
               className={`relative overflow-hidden rounded-xl border p-6 shadow-sm transition-all duration-500 will-change-transform ${
                 animatedItems.has(n.id)
                   ? "opacity-100 translate-y-0 animate-pop-in"
@@ -76,8 +81,8 @@ export function NewsList() {
               {/* blinking corner dot */}
               <span
                 className={`pointer-events-none absolute -top-1 -right-1 h-2 w-2 rounded-full ${
-                  isBlue ? "bg-blue-500" : isEmerald ? "bg-emerald-500" : "bg-purple-500"
-                } animate-blink`}
+                  isCurrent ? "bg-orange-500" : isBlue ? "bg-blue-500" : isEmerald ? "bg-emerald-500" : "bg-purple-500"
+                } ${blinkClass}`}
                 aria-hidden="true"
               />
 
@@ -90,7 +95,11 @@ export function NewsList() {
               />
 
               <div className="mb-2 flex items-center gap-2 text-xs text-gray-600">
-                <div className={`h-2 w-2 rounded-full ${isBlue ? "bg-blue-500" : isEmerald ? "bg-emerald-500" : "bg-purple-500"} animate-pulse`} />
+                <div
+                  className={`h-2 w-2 rounded-full ${
+                    isCurrent ? "bg-orange-500" : isBlue ? "bg-blue-500" : isEmerald ? "bg-emerald-500" : "bg-purple-500"
+                  } ${isCurrent ? "animate-pulse-fast" : "animate-pulse"}`}
+                />
                 <span>{new Date(n.date).toDateString()}</span>
                 <span
                   className="ml-2 inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold text-white"
@@ -99,7 +108,7 @@ export function NewsList() {
                     boxShadow: `0 4px 12px ${accent}44`,
                   }}
                 >
-                  Update
+                  {isCurrent ? "Ongoing" : "Update"}
                 </span>
               </div>
               <h3
@@ -145,7 +154,11 @@ export function NewsList() {
         }
         .animate-pop-in { animation: pop-in 600ms cubic-bezier(0.22, 1, 0.36, 1) both; }
         @keyframes blink { 0%, 100% { opacity: .3; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.25); } }
+        @keyframes blink-fast { 0%, 100% { opacity: .2; transform: scale(0.85); } 50% { opacity: 1; transform: scale(1.35); } }
         .animate-blink { animation: blink 1.8s ease-in-out infinite; }
+        .animate-blink-fast { animation: blink-fast 1.1s ease-in-out infinite; }
+        @keyframes pulse-fast { 0%, 100% { opacity: .5; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1.1); } }
+        .animate-pulse-fast { animation: pulse-fast 1.4s ease-in-out infinite; }
         @keyframes sparkle { 0% { transform: translateY(0) scale(1); opacity:.8 } 50% { transform: translateY(-6px) scale(1.2); opacity:1 } 100% { transform: translateY(0) scale(1); opacity:.8 } }
         .animate-sparkle { animation: sparkle 2.2s ease-in-out infinite; }
         @keyframes sheen { 0% { transform: translateX(-120%) rotate(12deg); } 100% { transform: translateX(180%) rotate(12deg); } }

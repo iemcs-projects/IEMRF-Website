@@ -5,14 +5,28 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import DownloadButton from "@/components/download-button"
+import { getProjectDownloadUrl } from "@/lib/downloads"
+import { findPersonByName } from "@/lib/people"
 
 export function EventCard({ event, isUpcoming = false }: { event: EventItem; isUpcoming?: boolean }) {
   const date = new Date(event.date)
   const dateStr = date.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" })
+  const resolvedMentor = findPersonByName((event as any).mentor)
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
       <CardContent className="p-0">
         <img src={event.image || "/placeholder.jpg"} alt={event.title} className="h-48 w-full object-cover" />
+        {resolvedMentor ? (
+          <div className="absolute top-2 left-2 z-10 bg-white/90 backdrop-blur px-2 py-1 rounded-md shadow-sm flex items-center gap-2">
+            <Avatar className="h-6 w-6">
+              <AvatarImage src={resolvedMentor?.image} alt={resolvedMentor?.name || "Mentor"} />
+              <AvatarFallback>{(resolvedMentor?.name || "").split(" ").map((p) => p[0]).slice(0,2).join("")}</AvatarFallback>
+            </Avatar>
+            <span className="text-xs text-gray-800">{resolvedMentor?.name}</span>
+          </div>
+        ) : null}
         <div className="p-5">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-blue-700">{event.category}</span>
@@ -47,6 +61,9 @@ export function EventCard({ event, isUpcoming = false }: { event: EventItem; isU
                 </DialogContent>
               </Dialog>
             )}
+            <div className="w-full mt-2">
+              <DownloadButton href={getProjectDownloadUrl("event", event.id)} />
+            </div>
           </div>
         </div>
       </CardContent>

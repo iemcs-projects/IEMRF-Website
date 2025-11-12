@@ -1,0 +1,14 @@
+{
+  "research:rp-001": {
+    "guide": {
+      "id": "b-chaki",
+      "name": "Biswajit Chaki",
+      "image": "/Biswajit_Chaki.png"
+    },
+    "lead": {
+      "id": "j-basu",
+      "name": "Jigisha Basu",
+      "image": "/img1-1.png"
+    }
+  }
+}
