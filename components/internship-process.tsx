@@ -1,5 +1,8 @@
 "use client"
 
+import { Fragment } from "react"
+import { ArrowRight } from "lucide-react"
+
 const processSteps = [
   {
     step: "01",
@@ -56,58 +59,54 @@ export function InternshipProcess() {
       </div>
       
       {/* Flowchart Structure */}
-      <div className="relative max-w-6xl mx-auto">
-        {/* Desktop Flowchart */}
-        <div className="hidden lg:block">
-          <div className="flex flex-wrap justify-center items-start gap-8 pb-20">
-            {processSteps.map((step, index) => (
-              <div key={index} className="flex items-center">
-                {/* Process Step */}
-                <div className="relative">
-                  <div className={`w-20 h-20 ${step.color} rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg hover:scale-105 transition-transform duration-300`}>
-                    {step.step}
-                  </div>
-                  <div className="absolute -bottom-20 left-1/2 transform -translate-x-1/2 text-center w-32">
-                    <h3 className="text-sm font-semibold text-gray-900 mb-1">{step.title}</h3>
-                    <p className="text-xs text-gray-600 leading-tight">{step.description}</p>
-                  </div>
-                </div>
-                
-                {/* Arrow Connector */}
-                {index < processSteps.length - 1 && (
-                  <div className="flex items-center mx-4">
-                    <div className="w-8 h-0.5 bg-gray-300"></div>
-                    <div className="w-0 h-0 border-l-4 border-l-gray-300 border-t-2 border-t-transparent border-b-2 border-b-transparent ml-1"></div>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Mobile Flowchart */}
-        <div className="lg:hidden">
-          <div className="space-y-8">
-            {processSteps.map((step, index) => (
-              <div key={index} className="flex items-center relative">
-                {/* Step Circle */}
-                <div className={`w-16 h-16 ${step.color} rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg flex-shrink-0`}>
+      <div className="relative mx-auto max-w-6xl">
+        {/* Desktop Flow */}
+        <div className="hidden items-start justify-center gap-6 lg:flex">
+          {processSteps.map((step, index) => (
+            <Fragment key={step.step}>
+              <div className="flex flex-col items-center text-center max-w-[200px]">
+                <div
+                  className={`${step.color} flex h-14 w-14 items-center justify-center rounded-full text-white text-sm font-semibold shadow-md transition-transform duration-300 hover:scale-105`}
+                >
                   {step.step}
                 </div>
-                
-                {/* Step Content */}
-                <div className="ml-4 flex-1">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-1">{step.title}</h3>
+                <div className="mt-4 space-y-2">
+                  <h3 className="text-base font-semibold text-gray-900">{step.title}</h3>
                   <p className="text-sm text-gray-600 leading-relaxed">{step.description}</p>
                 </div>
-                
-                {/* Vertical Arrow */}
-                {index < processSteps.length - 1 && (
-                  <div className="absolute left-8 top-20 w-0.5 h-8 bg-gray-300"></div>
-                )}
               </div>
-            ))}
-          </div>
+              {index < processSteps.length - 1 && (
+                <div className="flex items-center gap-3 text-emerald-500">
+                  <div className="h-0.5 w-12 bg-gradient-to-r from-gray-200 to-emerald-400" />
+                  <ArrowRight className="h-6 w-6 text-emerald-500" />
+                  <div className="h-0.5 w-12 bg-gradient-to-r from-emerald-400 to-gray-200" />
+                </div>
+              )}
+            </Fragment>
+          ))}
+        </div>
+
+        {/* Mobile Flow */}
+        <div className="space-y-8 lg:hidden">
+          {processSteps.map((step, index) => (
+            <div key={step.step} className="relative flex items-start gap-4">
+              <div
+                className={`${step.color} flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-xs font-semibold text-white shadow-md`}
+              >
+                {step.step}
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-gray-900">{step.title}</h3>
+                <p className="mt-1 text-sm text-gray-600 leading-relaxed">{step.description}</p>
+              </div>
+              {index < processSteps.length - 1 && (
+                <div className="absolute left-6 top-12 flex flex-col items-center text-emerald-500">
+                  <div className="h-10 w-0.5 bg-gradient-to-b from-gray-200 to-emerald-400" />
+                  <ArrowRight className="mt-1 rotate-90 text-emerald-500" />
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </section>

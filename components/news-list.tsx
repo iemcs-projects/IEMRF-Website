@@ -2,6 +2,7 @@
 
 import useSWR from "swr"
 import { useState, useEffect } from "react"
+import Link from "next/link"
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json())
 
@@ -49,6 +50,7 @@ export function NewsList() {
             ? "linear-gradient(135deg, #fff 0%, #d1fae5 35%, #ecfeff 100%)"
             : "linear-gradient(135deg, #fff 0%, #ede9fe 35%, #f5f3ff 100%)"
           const blinkClass = isCurrent ? "animate-blink-fast" : "animate-blink"
+          const readMoreLink = n.id === "winter-internship" ? "/internship?highlight=apply" : undefined
           return (
             <li
               key={n.id}
@@ -123,13 +125,16 @@ export function NewsList() {
                 {n.title}
               </h3>
               <p className="text-sm text-gray-600 leading-relaxed">{n.summary}</p>
-              <div
-                className="mt-3 inline-flex items-center text-xs font-medium text-blue-600 hover:text-blue-800"
-                role="button"
-                tabIndex={0}
-              >
-                Read more →
-              </div>
+              {readMoreLink ? (
+                <Link
+                  href={readMoreLink}
+                  className="mt-3 inline-flex items-center text-xs font-medium text-blue-600 hover:text-blue-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/70"
+                >
+                  Read more →
+                </Link>
+              ) : (
+                <span className="mt-3 inline-flex items-center text-xs font-medium text-blue-600">Read more →</span>
+              )}
 
               {/* glow ring on hover */}
               <div

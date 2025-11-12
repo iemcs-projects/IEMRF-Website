@@ -1,3 +1,7 @@
+"use client"
+
+import { useEffect, useMemo, useState } from "react"
+import { useSearchParams } from "next/navigation"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { AnimatedSection } from "@/components/animated-section"
@@ -7,8 +11,31 @@ import { InternshipApply } from "@/components/internship-apply"
 import { InternshipBenefits } from "@/components/internship-benefits"
 import { InternshipProcess } from "@/components/internship-process"
 import { InternshipTestimonials } from "@/components/internship-testimonials"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
 export default function InternshipPage() {
+  const searchParams = useSearchParams()
+  const [applyOptionsOpen, setApplyOptionsOpen] = useState(false)
+  const [highlightApplyButton, setHighlightApplyButton] = useState(false)
+
+  useEffect(() => {
+    if (searchParams.get("highlight") === "apply") {
+      setHighlightApplyButton(true)
+      const timer = window.setTimeout(() => {
+        setHighlightApplyButton(false)
+      }, 6000)
+      return () => window.clearTimeout(timer)
+    }
+  }, [searchParams])
+
+  const topBannerClasses = useMemo(
+    () =>
+      `bg-white/90 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg border border-white/20 transition ${
+        highlightApplyButton ? "ring-2 ring-emerald-500 animate-[pulse_1.1s_ease-in-out_infinite]" : ""
+      }`,
+    [highlightApplyButton],
+  )
+
   return (
     <main>
       <SiteHeader />
@@ -19,14 +46,22 @@ export default function InternshipPage() {
         <div className="mx-auto max-w-6xl px-4 py-14 sm:py-16 md:py-20">
           {/* Apply for Internship - Top Right */}
           <div className="absolute top-6 right-6 lg:right-10 z-10">
-            <div className="bg-white/90 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg border border-white/20">
+            <div className={topBannerClasses}>
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                <div
+                  className={`w-2 h-2 rounded-full bg-emerald-500 ${
+                    highlightApplyButton ? "animate-[pulse_0.9s_ease-in-out_infinite]" : "animate-pulse"
+                  }`}
+                ></div>
                 <span className="text-sm font-semibold text-gray-800">Apply Now</span>
               </div>
-              <a href="#apply" className="inline-flex h-8 items-center justify-center rounded-md bg-emerald-600 px-3 text-xs font-semibold text-white shadow hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/80 mt-2">
+              <button
+                type="button"
+                onClick={() => setApplyOptionsOpen(true)}
+                className="mt-2 inline-flex h-8 items-center justify-center rounded-md bg-emerald-600 px-3 text-xs font-semibold text-white shadow transition hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/80"
+              >
                 Apply for Internship
-              </a>
+              </button>
             </div>
           </div>
 
@@ -110,6 +145,53 @@ export default function InternshipPage() {
         </AnimatedSection>
       </section>
       <SiteFooter />
+
+      <Dialog open={applyOptionsOpen} onOpenChange={setApplyOptionsOpen}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader className="mb-4">
+            <DialogTitle className="text-2xl font-semibold text-gray-900">Choose an application track</DialogTitle>
+            <DialogDescription className="text-sm text-gray-600">
+              Pick the option that fits you best and submit your information. We’ll reach out shortly.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="flex flex-col gap-3 rounded-xl border border-blue-200 bg-blue-50/70 p-5 shadow-sm">
+              <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-blue-600">
+                🌟 Super 30 Internship Program
+              </div>
+              <p className="text-sm text-gray-700">
+                Exclusive industrial internship program for top-performing students with intensive mentorship and live
+                projects.
+              </p>
+              <a
+                href="https://docs.google.com/forms/d/e/1FAIpQLSee1TYmyNyAA8AVGYCLzghot_zmqL3shJkszxLwb450cNdejQ/viewform?usp=header"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-auto inline-flex h-10 items-center justify-center rounded-md bg-blue-600 px-4 text-xs font-semibold uppercase tracking-wide text-white shadow transition hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              >
+                Click Here to Apply
+              </a>
+            </div>
+            <div className="flex flex-col gap-3 rounded-xl border border-emerald-200 bg-emerald-50/70 p-5 shadow-sm">
+              <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-emerald-600">
+                💡 Have an Idea? Share Your CV
+              </div>
+              <p className="text-sm text-gray-700">
+                Got an innovative project or idea? Submit your profile, and we’ll connect you with the right mentors to
+                co-create.
+              </p>
+              <a
+                href="https://docs.google.com/forms/d/e/1FAIpQLScnmA8dpbEuuUwMVcUTLdWy7PLlWFuoWMZ9ZXfo97bMU-Ph0w/viewform?usp=header"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-auto inline-flex h-10 items-center justify-center rounded-md bg-emerald-600 px-4 text-xs font-semibold uppercase tracking-wide text-white shadow transition hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+              >
+                Click Here to Apply
+              </a>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </main>
   )
 }

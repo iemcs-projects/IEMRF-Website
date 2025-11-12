@@ -80,15 +80,15 @@ export default function HomePage() {
               {partners.map((p) => (
                 <div
                   key={p.name}
-                  className="group relative flex size-28 items-center justify-center rounded-xl border bg-white shadow-sm transition duration-300 hover:shadow-md"
+                  className="group relative flex h-32 w-32 items-center justify-center rounded-2xl border bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl md:h-36 md:w-36"
                 >
                   <img
                     src={p.image || "/placeholder.svg"}
                     alt={`${p.name} logo`}
-                    className="max-h-16 max-w-16 object-contain"
+                    className="max-h-20 max-w-24 object-contain md:max-h-24 md:max-w-28"
                     title={p.name}
                   />
-                  <span className="pointer-events-none absolute bottom-2 left-1/2 -translate-x-1/2 rounded-md bg-blue-700/90 px-2 py-1 text-xs font-medium text-white opacity-0 shadow-md transition duration-200 group-hover:-translate-y-1 group-hover:opacity-100">
+                  <span className="pointer-events-none absolute -bottom-10 left-1/2 -translate-x-1/2 rounded-md bg-blue-700/95 px-2.5 py-1.5 text-xs font-medium text-white opacity-0 shadow-lg transition duration-200 group-hover:-translate-y-1 group-hover:opacity-100">
                     {p.name}
                   </span>
                 </div>

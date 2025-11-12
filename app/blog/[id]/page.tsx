@@ -75,6 +75,74 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
   // Get related posts (excluding current post)
   const relatedPosts = recentPosts.filter(p => p.id !== post.id).slice(0, 3)
 
+  const formatBlogContent = (content: string) => {
+    const lines = content.split(/\r?\n/)
+    let html = ""
+    let inList = false
+    const flushList = () => {
+      if (inList) {
+        html += "</ul>"
+        inList = false
+      }
+    }
+    const headingKeywords = new Set([
+      "Introduction",
+      "Background",
+      "Objectives",
+      "Challenges",
+      "Implementation Approach",
+      "Implementation approach",
+      "Implementation",
+      "Conclusion",
+      "Conclusion.",
+      "Summary",
+      "Key Takeaways",
+    ])
+
+    lines.forEach((rawLine) => {
+      const line = rawLine.trim()
+      if (!line) {
+        flushList()
+        return
+      }
+
+      if (/^\d+\.\d+\s+/.test(line)) {
+        flushList()
+        html += `<h3>${line.replace(/^\d+\.\d+\s+/, "")}</h3>`
+        return
+      }
+
+      if (/^\d+\.\s+/.test(line)) {
+        flushList()
+        html += `<h3>${line.replace(/^\d+\.\s+/, "")}</h3>`
+        return
+      }
+
+      const normalizedHeading = line.replace(/:$/, "")
+      if (headingKeywords.has(normalizedHeading)) {
+        flushList()
+        html += `<h3>${normalizedHeading}</h3>`
+        return
+      }
+
+      if (/^·/.test(line) || /^-\s+/.test(line) || /^\*\s+/.test(line)) {
+        if (!inList) {
+          html += `<ul class="list-disc pl-6 space-y-1">`
+          inList = true
+        }
+        html += `<li>${line.replace(/^·\s*/, "").replace(/^[-*]\s*/, "")}</li>`
+        return
+      }
+
+      html += `<p>${line}</p>`
+    })
+
+    flushList()
+    return html
+  }
+
+  const formattedContent = formatBlogContent(post.content)
+
   return (
     <div className="min-h-screen bg-gray-50">
       <SiteHeader />
@@ -165,9 +233,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
             <div className="prose prose-lg max-w-none">
               <div 
                 className="text-gray-700 leading-relaxed"
-                dangerouslySetInnerHTML={{ 
-                  __html: post.content.replace(/\n/g, '<br />') 
-                }}
+                dangerouslySetInnerHTML={{ __html: formattedContent }}
               />
             </div>
           </div>

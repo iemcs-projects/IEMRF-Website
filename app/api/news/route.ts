@@ -22,9 +22,9 @@ export async function GET() {
     },
     {
       id: "summer-internship",
-      title: "Summer Internship 2026 Applications Now Open",
+      title: "Summer Internship 2025 Applications Now Open",
       date: "2025-09-15",
-      summary: "Early applications are open for the summer internship focused on research commercialization and product engineering.",
+      summary: "Early applications are open for the 2025 summer internship focused on research commercialization and product engineering.",
     },
   ]
   return NextResponse.json({ news })

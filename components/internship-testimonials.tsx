@@ -12,7 +12,7 @@ const testimonials = [
     domain: "AI/ML",
   },
   {
-    name: "Arjun Patel",
+    name: "Arun Sengupta",
     role: "Web Development Intern",
     company: "StartupXYZ",
     quote: "Working on the ScholarHub project taught me modern web technologies and collaborative development practices. The experience was invaluable.",
@@ -20,7 +20,7 @@ const testimonials = [
     domain: "Web",
   },
   {
-    name: "Sneha Reddy",
+    name: "Sneha Majumdar",
     role: "IoT Intern",
     company: "GreenTech Solutions",
     quote: "The IoT internship allowed me to work on cutting-edge sensor networks. The practical approach and industry exposure were amazing.",
