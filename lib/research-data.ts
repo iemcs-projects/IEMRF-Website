@@ -363,7 +363,7 @@ export const researchProjects: ResearchProject[] = [
     status: "completed",
     overview: "The Smart Pill Box is an IoT-enabled intelligent medication management system designed to ensure timely and accurate medicine intake for patients. It features multiple compartments that store medicines according to the patient’s prescription schedule and provides automated alerts and monitoring to enhance medication adherence and healthcare efficiency.",
     keyFindings: ["Improved medication adherence by 85% among test users", "Enabled real-time alerts and tracking via IoT connectivity", "Environment-aware storage maintained ideal conditions for sensitive medicines", "Enhanced patient safety and remote healthcare monitoring capabilities"],
-    mentor: ["Subhabrata Banerjee"],
+    mentor: ["Subhabrata Banerjee, Prof Ankita"],
     
     startDate: "02/03/2025",
     endDate: "25/07/2025",
