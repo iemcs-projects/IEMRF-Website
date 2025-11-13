@@ -6,7 +6,6 @@ import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { AnimatedSection } from "@/components/animated-section"
 import { InternshipContent } from "@/components/internship-content"
-import { Button } from "@/components/ui/button"
 import { InternshipApply } from "@/components/internship-apply"
 import { InternshipBenefits } from "@/components/internship-benefits"
 import { InternshipProcess } from "@/components/internship-process"
@@ -47,7 +46,8 @@ function InternshipContentWithParams() {
   return (
     <main>
       <SiteHeader />
-      {/* Vibrant hero section */}
+
+      {/* Hero Section */}
       <section className="relative isolate">
         <div
           className="absolute inset-0 -z-10 bg-gradient-to-br from-blue-600 via-emerald-500 to-purple-600"
@@ -57,8 +57,9 @@ function InternshipContentWithParams() {
           className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.15),transparent_40%),_radial-gradient(circle_at_80%_30%,rgba(255,255,255,0.12),transparent_40%)]"
           aria-hidden="true"
         />
+
         <div className="mx-auto max-w-6xl px-4 py-14 sm:py-16 md:py-20">
-          {/* Apply for Internship - Top Right */}
+          {/* Apply Now Box */}
           <div className="absolute top-6 right-6 lg:right-10 z-10">
             <div className={topBannerClasses}>
               <div className="flex items-center gap-2">
@@ -83,6 +84,7 @@ function InternshipContentWithParams() {
             </div>
           </div>
 
+          {/* Hero Text */}
           <AnimatedSection>
             <header className="max-w-3xl text-white">
               <p className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-medium shadow ring-1 ring-white/30 backdrop-blur">
@@ -111,7 +113,7 @@ function InternshipContentWithParams() {
           </AnimatedSection>
         </div>
 
-        {/* subtle decorative bubbles */}
+        {/* Floating Bubbles */}
         <div
           className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
           aria-hidden="true"
@@ -130,7 +132,7 @@ function InternshipContentWithParams() {
         </div>
       </section>
 
-      {/* Other sections remain unchanged */}
+      {/* Content Sections */}
       <section className="mx-auto max-w-6xl px-4 py-10">
         <AnimatedSection>
           <InternshipContent />
@@ -155,6 +157,7 @@ function InternshipContentWithParams() {
         </AnimatedSection>
       </section>
 
+      {/* Apply Section */}
       <section id="apply" className="mx-auto max-w-6xl px-4 pb-14">
         <AnimatedSection>
           <div className="rounded-2xl border bg-white p-6 shadow-sm">
@@ -175,6 +178,7 @@ function InternshipContentWithParams() {
 
       <SiteFooter />
 
+      {/* Dialog */}
       <Dialog open={applyOptionsOpen} onOpenChange={setApplyOptionsOpen}>
         <DialogContent className="max-w-3xl">
           <DialogHeader className="mb-4">
@@ -186,7 +190,40 @@ function InternshipContentWithParams() {
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 md:grid-cols-2">
-            {/* Cards unchanged */}
+            <div className="flex flex-col gap-3 rounded-xl border border-blue-200 bg-blue-50/70 p-5 shadow-sm">
+              <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-blue-600">
+                🌟 Super 30 Internship Program
+              </div>
+              <p className="text-sm text-gray-700">
+                Exclusive industrial internship program for top-performing students with intensive mentorship and live
+                projects.
+              </p>
+              <a
+                href="https://docs.google.com/forms/d/e/1FAIpQLSee1TYmyNyAA8AVGYCLzghot_zmqL3shJkszxLwb450cNdejQ/viewform?usp=header"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-auto inline-flex h-10 items-center justify-center rounded-md bg-blue-600 px-4 text-xs font-semibold uppercase tracking-wide text-white shadow transition hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              >
+                Click Here to Apply
+              </a>
+            </div>
+            <div className="flex flex-col gap-3 rounded-xl border border-emerald-200 bg-emerald-50/70 p-5 shadow-sm">
+              <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-emerald-600">
+                💡 Have an Idea? Share Your CV
+              </div>
+              <p className="text-sm text-gray-700">
+                Got an innovative project or idea? Submit your profile, and we’ll connect you with the right mentors to
+                co-create.
+              </p>
+              <a
+                href="https://docs.google.com/forms/d/e/1FAIpQLScnmA8dpbEuuUwMVcUTLdWy7PLlWFuoWMZ9ZXfo97bMU-Ph0w/viewform?usp=header"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-auto inline-flex h-10 items-center justify-center rounded-md bg-emerald-600 px-4 text-xs font-semibold uppercase tracking-wide text-white shadow transition hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+              >
+                Click Here to Apply
+              </a>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
