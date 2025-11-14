@@ -192,7 +192,7 @@ function InternshipContentWithParams() {
           <div className="grid gap-4 md:grid-cols-2">
             <div className="flex flex-col gap-3 rounded-xl border border-blue-200 bg-blue-50/70 p-5 shadow-sm">
               <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-blue-600">
-                🌟 Super 30 Internship Program
+                🌟 Super 30 Internship Program (For 3rd Year Students)
               </div>
               <p className="text-sm text-gray-700">
                 Exclusive industrial internship program for top-performing students with intensive mentorship and live
