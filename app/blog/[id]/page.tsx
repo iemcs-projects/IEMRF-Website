@@ -79,12 +79,14 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
     const lines = content.split(/\r?\n/)
     let html = ""
     let inList = false
+    
     const flushList = () => {
       if (inList) {
         html += "</ul>"
         inList = false
       }
     }
+
     const headingKeywords = new Set([
       "Introduction",
       "Background",
@@ -97,44 +99,69 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
       "Conclusion.",
       "Summary",
       "Key Takeaways",
+      "Problems Resolved by Industry 4.0",
+      "The Evolution of Industry 4.0",
+      "Key Technologies of Industry 4.0",
     ])
 
     lines.forEach((rawLine) => {
       const line = rawLine.trim()
       if (!line) {
-        flushList()
+        if (inList) {
+          flushList()
+        }
+        html += "<div class='h-3'></div>"
         return
       }
 
+      // Main section headings (e.g., "1 Section" or "1. Section")
+      if (/^\d+\.?\s+/.test(line) && !headingKeywords.has(line.replace(/^\d+\.?\s+/, "").replace(/:$/, ""))) {
+        const match = line.match(/^\d+\.?\s+(.+)/)
+        if (match) {
+          flushList()
+          const heading = match[1].trim()
+          // Add decorative left border accent for main sections
+          html += `<div class="border-l-4 border-emerald-500 pl-4 mt-8 mb-4">
+            <h2 class="text-2xl font-bold text-gray-900">${heading}</h2>
+          </div>`
+          return
+        }
+      }
+
+      // Sub-section headings (e.g., "1.1 Subsection")
       if (/^\d+\.\d+\s+/.test(line)) {
         flushList()
-        html += `<h3>${line.replace(/^\d+\.\d+\s+/, "")}</h3>`
+        const heading = line.replace(/^\d+\.\d+\s+/, "").trim()
+        html += `<h3 class="text-lg font-semibold mt-6 mb-3 text-gray-900">${heading}</h3>`
         return
       }
 
-      if (/^\d+\.\s+/.test(line)) {
-        flushList()
-        html += `<h3>${line.replace(/^\d+\.\s+/, "")}</h3>`
-        return
-      }
-
+      // Keyword-based major headings
       const normalizedHeading = line.replace(/:$/, "")
       if (headingKeywords.has(normalizedHeading)) {
         flushList()
-        html += `<h3>${normalizedHeading}</h3>`
+        html += `<div class="border-l-4 border-blue-500 pl-4 mt-8 mb-4">
+          <h2 class="text-2xl font-bold text-gray-900">${normalizedHeading}</h2>
+        </div>`
         return
       }
 
+      // Bullet list items (bullet, dash, or dot)
       if (/^·/.test(line) || /^-\s+/.test(line) || /^\*\s+/.test(line)) {
         if (!inList) {
-          html += `<ul class="list-disc pl-6 space-y-1">`
+          html += `<ul class="space-y-2 ml-4">`
           inList = true
         }
-        html += `<li>${line.replace(/^·\s*/, "").replace(/^[-*]\s*/, "")}</li>`
+        const itemText = line.replace(/^·\s*/, "").replace(/^[-*]\s*/, "")
+        html += `<li class="flex items-start gap-2">
+          <span class="text-emerald-500 font-semibold mt-1">•</span>
+          <span class="text-gray-700 leading-relaxed">${itemText}</span>
+        </li>`
         return
       }
 
-      html += `<p>${line}</p>`
+      // Regular paragraphs with improved styling
+      html += `<p class="mb-4 text-base leading-relaxed text-gray-700">${line}</p>`
     })
 
     flushList()
@@ -228,9 +255,39 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
         </section>
 
         {/* Article Content */}
-        <section className="bg-white">
+        <section className="bg-gradient-to-b from-white via-blue-50/30 to-white">
           <div className="max-w-4xl mx-auto px-4 pb-8">
-            <div className="prose prose-lg max-w-none">
+            <style jsx>{`
+              :global(.blog-content h2) {
+                transition: all 0.3s ease;
+                position: relative;
+              }
+              :global(.blog-content h2:hover) {
+                transform: translateX(4px);
+              }
+              :global(.blog-content h3) {
+                transition: color 0.3s ease;
+              }
+              :global(.blog-content h3:hover) {
+                color: #059669;
+              }
+              :global(.blog-content p) {
+                transition: background-color 0.3s ease;
+              }
+              :global(.blog-content p:hover) {
+                background-color: rgba(16, 185, 129, 0.05);
+                padding: 4px 8px;
+                border-radius: 4px;
+              }
+              :global(.blog-content li) {
+                transition: all 0.2s ease;
+              }
+              :global(.blog-content li:hover) {
+                padding-left: 8px;
+                color: #059669;
+              }
+            `}</style>
+            <div className="blog-content space-y-2">
               <div 
                 className="text-gray-700 leading-relaxed"
                 dangerouslySetInnerHTML={{ __html: formattedContent }}

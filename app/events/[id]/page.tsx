@@ -33,19 +33,29 @@ export default function EventDetailPage({ params, searchParams }: { params: { id
               <p className="mt-4 text-gray-700 leading-relaxed">{event.description}</p>
               <div className="mt-6 flex flex-wrap gap-3">
                 {isUpcoming && (
-                  <a href="#register" className="inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700">{wantsRegister ? 'Complete Registration' : 'Register'}</a>
+                  event.registrationDisabled ? (
+                    <button
+                      className="inline-flex items-center rounded-md bg-emerald-400 px-4 py-2 text-sm font-semibold text-white"
+                      disabled
+                      title="Registration disabled for this event"
+                    >
+                      Register
+                    </button>
+                  ) : (
+                    <a href="#register" className="inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700">{wantsRegister ? 'Complete Registration' : 'Register'}</a>
+                  )
                 )}
               </div>
             </div>
           </div>
         </AnimatedSection>
 
-        {isUpcoming && (
-          <AnimatedSection className="mt-12" id="register">
-            <h2 className="text-lg font-semibold text-gray-900">Register for this event</h2>
-            <EventRegisterForm />
-          </AnimatedSection>
-        )}
+        {isUpcoming && !event.registrationDisabled && (
+                  <AnimatedSection className="mt-12" id="register">
+                    <h2 className="text-lg font-semibold text-gray-900">Register for this event</h2>
+                    <EventRegisterForm />
+                  </AnimatedSection>
+                )}
       </section>
       <SiteFooter />
     </main>

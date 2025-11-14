@@ -90,8 +90,12 @@ export default function StartupsPage() {
                 <p className="mt-4 text-center text-sm text-slate-200">
                   Engineers brainstorming, components assembling, and ideas coming to life.
                 </p>
-                <div className="mt-6 h-24 w-full overflow-hidden rounded-xl bg-black/40">
-                  <div className="h-full w-full animate-[pulse_3s_ease-in-out_infinite] bg-[url('/abstract-tech.png')] bg-cover bg-center opacity-60" />
+                <div className="mt-6 h-32 w-full overflow-hidden rounded-xl bg-black/40">
+                  <img 
+                    src="/images/hero-innovation.jpg" 
+                    alt="Engineers brainstorming and collaborating" 
+                    className="h-full w-full object-cover opacity-70 hover:opacity-90 transition-opacity duration-300"
+                  />
                 </div>
               </div>
             </div>

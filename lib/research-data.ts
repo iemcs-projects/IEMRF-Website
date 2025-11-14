@@ -250,10 +250,7 @@ export const researchProjects: ResearchProject[] = [
       { month: "May", accuracy: 93, efficiency: 90 },
       { month: "Jun", accuracy: 95, efficiency: 92 },
     ],
-    visuals: [
-      { src: "/research/SDLC.jpg", caption: "SDLC Automator - UI prototype" },
-      { src: "/research/SDLC-2.jpg", caption: "Agent workflow diagram" },
-    ],
+    
   },
   {
     id: "rp-002",
@@ -289,7 +286,7 @@ export const researchProjects: ResearchProject[] = [
     results: ["Streamlined accreditation workflow with reduced manual work", "Saves evaluation time and effort for institutions", "Increases transparency and credibility in the grading process"],
     challenges: ["Manual preparation of reports and validation delays - Automated DVV reduces manual dependency", "Maintaining accuracy across diverse institutions - Weighted score framework ensures fairness"],
     futureWork: ["Integration with AI-driven analytics for real-time quality benchmarking", "Expansion to global accreditation frameworks for international collaborationm"],
-    teamMembers: ["Prof. R. Sen", "Ankit Verma", "Sneha Das", "Vikram Singh"],
+    teamMembers: ["Jigisha Basu, ECE Team, MBA Team"],
     
     useCases: ["Digital Nest", "Excel-Free Ready-to-Fill Interface", "Smart Metric Monitoring System", "NAAC Score Simulation"],
     milestones: [
@@ -308,8 +305,8 @@ export const researchProjects: ResearchProject[] = [
     keyFindings: ["Enabled continuous monitoring and anomaly detection in bridge performance.", "Reduced manual inspection time and improved early fault detection accuracy.", "Achieved seamless data flow from sensors to dashboards with minimal latency."],
     mentor: ["Biswajit Chaki"],
     lead: "Jigisha Basu",
-    startDate: "02/12/2024",
-    endDate: "16/01/2025",
+    startDate: "12/02/2024",
+    endDate: "01/16/2025",
     image: "/bridge-monitoring.png",
     visuals: [
       { 
@@ -336,7 +333,7 @@ export const researchProjects: ResearchProject[] = [
     mentor: ["Biswajit Chaki"],
     lead: "Jigisha Basu",
     startDate: "05/05/2025",
-    endDate: "25/07/2025",
+    endDate: "07/25/2025",
     image: "/HR-Analytics.png",
     description:
       "The project aims to design an AI-driven HR Analytics framework that consolidates fragmented HR data to deliver actionable insights. It focuses on enabling real-time workforce analytics, attrition prediction, and data-based HR strategy formulation to enhance decision-making efficiency.",
@@ -363,10 +360,10 @@ export const researchProjects: ResearchProject[] = [
     status: "completed",
     overview: "The Smart Pill Box is an IoT-enabled intelligent medication management system designed to ensure timely and accurate medicine intake for patients. It features multiple compartments that store medicines according to the patient’s prescription schedule and provides automated alerts and monitoring to enhance medication adherence and healthcare efficiency.",
     keyFindings: ["Improved medication adherence by 85% among test users", "Enabled real-time alerts and tracking via IoT connectivity", "Environment-aware storage maintained ideal conditions for sensitive medicines", "Enhanced patient safety and remote healthcare monitoring capabilities"],
-    mentor: ["Subhabrata Banerjee, Prof Ankita"],
+    mentor: ["Prof. (Dr.) Subhabrata Banerjee, Prof Ankita"],
     
-    startDate: "02/03/2025",
-    endDate: "25/07/2025",
+    startDate: "03/02/2025",
+    endDate: "07/25/2025",
     
     image: "/smart-pill-box.png",
     description:
@@ -375,12 +372,9 @@ export const researchProjects: ResearchProject[] = [
     results: [],
     challenges: ["Synchronizing multi-compartment dispensing with real-time alerts - Developed dynamic scheduling algorithms with IoT time triggers", "Maintaining medicine stability under varying conditions - BMP180 sensor to monitor environmental parameters", "Limited connectivity in remote areas - Hybrid communication using Wi-Fi + Bluetooth fallback"],
     futureWork: ["Mobile application integration for personalized reminders", "Cloud-based health record synchronization with doctors and caregivers", "Integration of AI-driven analytics for dosage prediction and missed-dose analysis", "Expansion to multi-user and hospital-scale smart dispensing systems"],
-    teamMembers: ["****"],
+    teamMembers: ["ECE Team"],
     
-    visuals: [
-      { src: "/smart-pill-box.png", caption: "Smart Pill Box prototype" },
-      { src: "/smart-pill-box-2.png", caption: "Circuit & sensors layout" }
-    ],
+    
   },
   {
     id: "rp-005",
@@ -389,7 +383,7 @@ export const researchProjects: ResearchProject[] = [
     status: "ongoing",
     overview: "The Patient GPS Tracker is a smart, IoT-enabled device designed to enhance the safety of dementia and elderly patients. It provides caregivers with real-time tracking, movement detection, and emergency alert notifications, ensuring timely intervention and continuous patient monitoring.",
     keyFindings: ["Achieved GPS accuracy within 5–10 meters.", "Reliable data transmission using GSM across urban and semi-urban regions.", "Effective fall/motion detection through MPU-6050 sensor integration.", "High system uptime and low power consumption with ESP32."],
-    mentor: ["Subhabrata Banerjee"],
+    mentor: ["Prof. (Dr.) Subhabrata Banerjee"],
      
     startDate: "02/03/2025",
     
@@ -400,15 +394,12 @@ export const researchProjects: ResearchProject[] = [
     results: [],
     challenges: ["Synchronizing multi-compartment dispensing with real-time alerts - Developed dynamic scheduling algorithms integrated with IoT-based time triggers to ensure accurate and timely medicine dispensing for each compartment.", "Maintaining medicine stability under varying environmental conditions - Integrated the BMP180 sensor to continuously monitor temperature and pressure, ensuring optimal conditions for medicine storage and alerting users in case of deviations."],
     futureWork: ["Integration with mobile app for caregiver dashboard and geofencing visualization.", "Implementation of AI-based anomaly detection for smarter alert systems.", "Addition of health vitals monitoring (heart rate, temperature).", "Development of solar-powered or energy-efficient models for longer battery life."],
-    teamMembers: ["***"],
+    teamMembers: ["ECE Team"],
     
     milestones: [
      
     ],
-    visuals: [
-      { src: "/patient-tracker.png", caption: "Patient GPS Tracker device" },
-      { src: "/patient-tracker-2.png", caption: "Mobile caregiver dashboard" }
-    ],
+    
   },
   
 
@@ -422,8 +413,8 @@ export const researchProjects: ResearchProject[] = [
     keyFindings: ["80% reduction in manual data entry workload", "95% accuracy in field completion across shipment records", "Enhanced data consistency and compliance for export documentation", "Scalable model adaptable to multiple product categories"],
     mentor: ["Biswajit Chaki"],
     
-    startDate: "02/01/2025",
-    endDate: "25/02/2025",
+    startDate: "07/01/2025",
+    endDate: "05/02/2025",
     image: "/chemical-name-extraction.png",
     description:
       "The proposed solution introduces an AI-assisted shipment register enhancement tool that integrates seamlessly with existing ERP and export management systems. By applying NLP techniques, the system extracts contextual meaning from item descriptions and related fields, while deep learning models predict and fill in missing or inconsistent data points. The entire process ensures standardization across chemical entries, reduces manual intervention, and increases operational efficiency.",
@@ -453,13 +444,14 @@ export const researchProjects: ResearchProject[] = [
     id: "rp-008",
     title: "Block Chain Analytics",
     area: "Blockchain Analytics, Artificial Intelligence, NLP, Financial Forecasting, Data Visualization",
-    status: "ongoing",
+    status: "completed",
     overview:
       "This project introduces an AI-powered Blockchain Analytics platform that tackles the challenge of predicting meme coin price movements by integrating historical price data with real-time social media sentiment and community engagement metrics.The system combines financial time-series modeling with NLP-driven sentiment analysis and macroeconomic indicators to identify early signals of price volatility and trend reversals. An interactive analytics dashboard visualizes real-time data — including price trends, sentiment dynamics, and community engagement patterns — providing comprehensive insights into meme coin ecosystems.",
     keyFindings: ["87% model accuracy in short-term meme coin price movement prediction", "70% reduction in manual trend analysis effort", "Successful correlation between sentiment surges and price spikes", "Interactive dashboard delivering real-time forecasting and insights", "Framework adaptable to other crypto assets and token classes"],
-    mentor: ["**"],
-    lead: "**",
-    startDate: "**",
+    mentor: ["Unknown"],
+    
+    startDate: "02/11/2024",
+    endDate: "12/20/2024",
     image: "/Blockchain-Analytics.png",
     description:
       "The Blockchain Analytics project aims to develop an intelligent framework for forecasting meme coin price behavior by fusing on-chain analytics, social sentiment mining, and machine learning-based prediction.",
@@ -471,10 +463,10 @@ export const researchProjects: ResearchProject[] = [
       "Real-time visualization and AI-powered reporting via dashboard integration",
 
     ],
-    results: [],
+    
     challenges: ["High data noise in social sentiment streams - Hybrid NLP ensemble (VADER + Transformer fine-tuning)", "Lag correlation between sentiment and price response - Time-window alignment and rolling averages in data pipeline", "Model generalization across meme tokens - Adaptive retraining and feature scaling per asset"],
     futureWork: ["Integration with DeFi and NFT market data", "Reinforcement learning for adaptive predictive tuning", "Mobile and cloud-deployed dashboard access", "Expansion to automated portfolio risk recommendations"],
-    teamMembers: ["***"],
+    
     
     useCases: ["Meme Coin Price Forecasting", "Social Media Sentiment Tracking", "Investor Behavior Analysis", "On-Chain Token Distribution Mapping"],
     milestones: [
@@ -484,10 +476,7 @@ export const researchProjects: ResearchProject[] = [
       { milestone: "Dashboard Deployment", progress: 50 },
       { milestone: "AI Reporting System", progress: 30 },
     ],
-    visuals: [
-      { src: "/Blockchain-Analytics.png", caption: "Blockchain analytics dashboard" },
-      { src: "/blockchain-2.png", caption: "On-chain visualization" }
-    ],
+    
   },
 
   {
@@ -498,9 +487,9 @@ export const researchProjects: ResearchProject[] = [
     overview:
       "BlazeCaseAI is a lightweight, AI-driven case management and workflow automation platform inspired by Pega systems. It enables organizations to design, execute, and monitor business processes seamlessly using an intuitive, low-code environment.",
     keyFindings: ["Achieved 40% reduction in manual task handling through rule automation.", "Enhanced decision accuracy via AI-driven process recommendations.", "Enabled flexible process modeling through low-code configuration."],
-    mentor: ["**"],
-    lead: "**",
-    startDate: "**",
+    mentor: ["Mr. Pritam, Mr. Samya, Biswajit Chaki"],
+    
+    startDate: "02/02/2025",
     image: "/BlazsCaseAI.png",
     description:
       "The project focuses on building an intelligent process orchestration system that automates repetitive tasks, manages workflows dynamically, and adapts to business logic through machine learning insights. BlazeCaseAI empowers teams to configure process rules, automate approvals, and visualize performance analytics efficiently.",
@@ -511,14 +500,12 @@ export const researchProjects: ResearchProject[] = [
       "Implemented backend APIs in Flask for workflow logic, database connectivity, and performance analytics.",
       
     ],
-    results: [],
+   
     challenges: ["Complex rule management for dynamic workflows - Implemented an adaptive rule engine capable of learning from process data using AI models", "Integrating AI within lightweight architecture - Used TensorFlow Lite models for optimized, low-latency predictions", "Ensuring scalability while maintaining simplicity - Adopted modular microservice architecture for easy expansion and maintenance"],
     futureWork: ["Incorporate generative AI for automatic workflow creation.", "Enable drag-and-drop rule configuration with visual analytics.", "Integrate with enterprise APIs for cross-platform process automation."],
-    teamMembers: ["***"],
+    teamMembers: ["Satyapir Ghosh, CSE Team"],
     
-    visuals: [
-      { src: "/BlazsCaseAI.png", caption: "ASL / ML demo visuals" }
-    ],
+    
   },
 
   {
@@ -529,9 +516,9 @@ export const researchProjects: ResearchProject[] = [
     overview:
       "The Education ERP project aims to develop an integrated and intelligent ERP system tailored for educational institutions, specifically designed to enhance and replace the existing IEM ERP platform. It focuses on bridging identified functional gaps and streamlining academic and administrative operations.",
     keyFindings: ["Improved inter-departmental coordination and reduced manual intervention by 45%.", "Enhanced data accessibility and accuracy across stakeholders.", "Provided real-time performance insights through Power BI dashboards."],
-    mentor: ["**"],
-    lead: "**",
-    startDate: "**",
+    mentor: ["Mr. Arijit"],
+    
+    startDate: "06/05/2025",
     image: "/Education-ERP.png",
     description:
       "The solution provides a unified digital platform for managing student records, attendance, examinations, faculty data, fees, and departmental workflows. Through automation, analytics, and user-friendly interfaces, the system ensures better transparency, efficiency, and decision-making within the institute.",
@@ -543,10 +530,10 @@ export const researchProjects: ResearchProject[] = [
       
 
     ],
-    results: [],
+    
     challenges: ["Integration with legacy systems and data migration - Designed robust ETL pipelines for seamless migration and synchronization of existing data", "User adoption and interface complexity - Implemented a simplified, role-based user interface with intuitive navigation and guided onboarding.", "Maintaining system scalability and performance - Used modular architecture and database optimization techniques to ensure smooth scalability for future expansion"],
     futureWork: ["Integrate AI-driven analytics for predictive student performance tracking.", "Add chatbot support for student and faculty query resolution.", "Extend the platform for multi-campus deployment and cross-institution integration."],
-    teamMembers: ["***"],
+    teamMembers: ["Sayan Rudra, CSE Team"],
     
     
   },

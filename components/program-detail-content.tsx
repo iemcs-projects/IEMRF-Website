@@ -7,23 +7,164 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import type { ProgramDetail } from "@/lib/programs-data"
+import { useState } from "react"
+import ProgramMentorSelector from "./program-mentor-selector"
 
 interface ProgramDetailContentProps {
   program: ProgramDetail
 }
 
 export default function ProgramDetailContent({ program }: ProgramDetailContentProps) {
-  const handleDownload = () => {
-    if (program.downloadPath) {
-      // Create a download link for the PDF
-      const link = document.createElement("a")
-      link.href = program.downloadPath
-      link.download = `${program.title.replace(/\s+/g, "-").toLowerCase()}-details.pdf`
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
+  const [isApplyDialogOpen, setIsApplyDialogOpen] = useState(false)
+
+  const handleDownload = async () => {
+    try {
+      const html2canvas = (await import("html2canvas")).default
+      const jsPDF = (await import("jspdf")).jsPDF
+
+      const element = document.querySelector("main") || document.documentElement
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+      })
+
+      const imgData = canvas.toDataURL("image/jpeg", 0.98)
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4",
+      })
+
+      const imgWidth = 210 // A4 width in mm
+      const pageHeight = 297 // A4 height in mm
+      let heightLeft = canvas.height * (imgWidth / canvas.width)
+      let position = 0
+
+      const imgHeight = (canvas.height * imgWidth) / canvas.width
+
+      pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight)
+      heightLeft -= pageHeight
+
+      while (heightLeft > 0) {
+        position = heightLeft - canvas.height
+        pdf.addPage()
+        pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight)
+        heightLeft -= pageHeight
+      }
+
+      pdf.save(
+        `${program.title.replace(/\s+/g, "-").toLowerCase()}-details.pdf`
+      )
+    } catch (error) {
+      console.error("Error downloading PDF:", error)
+      // Fallback: open print dialog
+      window.print()
     }
+  }
+
+  const getProgramSpecificFields = () => {
+    const firstThreePrograms = ["p-inc-01", "p-res-01", "p-ment-01"]
+    if (!firstThreePrograms.includes(program.id)) {
+      return null
+    }
+
+    // Customized fields based on program category
+    switch (program.category) {
+      case "Incubation":
+        return (
+          <>
+            <div className="sm:col-span-1">
+              <Label htmlFor="ideaStage">Current Stage of Idea</Label>
+              <Select name="ideaStage">
+                <SelectTrigger id="ideaStage">
+                  <SelectValue placeholder="Select stage" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="concept">Concept Phase</SelectItem>
+                  <SelectItem value="prototype">Prototype Phase</SelectItem>
+                  <SelectItem value="mvp">MVP Ready</SelectItem>
+                  <SelectItem value="launched">Already Launched</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="sm:col-span-1">
+              <Label htmlFor="fundingNeeded">Funding Requirement</Label>
+              <Input id="fundingNeeded" name="fundingNeeded" placeholder="e.g., $50,000 - $100,000" />
+            </div>
+            <div className="sm:col-span-2">
+              <Label htmlFor="ideaPitch">Pitch Your Idea</Label>
+              <Textarea id="ideaPitch" name="ideaPitch" required rows={5} placeholder="Describe your startup idea, problem you're solving, and target market..." />
+            </div>
+          </>
+        )
+      case "Research":
+        return (
+          <>
+            <div className="sm:col-span-1">
+              <Label htmlFor="researchArea">Research Area</Label>
+              <Input id="researchArea" name="researchArea" placeholder="e.g., AI/ML, Healthcare, IoT" required />
+            </div>
+            <div className="sm:col-span-1">
+              <Label htmlFor="experience">Research Experience (Years)</Label>
+              <Input id="experience" name="experience" type="number" placeholder="0" />
+            </div>
+            <div className="sm:col-span-2">
+              <Label htmlFor="researchGoal">Your Research Goals</Label>
+              <Textarea id="researchGoal" name="researchGoal" required rows={5} placeholder="Describe your research interests, current projects, and what you hope to achieve..." />
+            </div>
+          </>
+        )
+      case "Mentorship":
+        return (
+          <>
+            <div className="sm:col-span-1">
+              <Label htmlFor="careerGoal">Career Goal</Label>
+              <Input id="careerGoal" name="careerGoal" placeholder="e.g., Entrepreneur, Researcher, Manager" required />
+            </div>
+            <div className="sm:col-span-1">
+              <Label htmlFor="mentorshipFocus">Mentorship Focus Area</Label>
+              <Select name="mentorshipFocus">
+                <SelectTrigger id="mentorshipFocus">
+                  <SelectValue placeholder="Select area" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="careerGuidance">Career Guidance</SelectItem>
+                  <SelectItem value="productDev">Product Development</SelectItem>
+                  <SelectItem value="fundRaising">Fund Raising</SelectItem>
+                  <SelectItem value="skillDev">Skill Development</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="sm:col-span-2">
+              <Label htmlFor="mentorshipNeed">What support do you need?</Label>
+              <Textarea id="mentorshipNeed" name="mentorshipNeed" required rows={5} placeholder="Tell us about your mentorship needs and what you want to learn..." />
+            </div>
+          </>
+        )
+      default:
+        return null
+    }
+  }
+
+  const handleApplySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    
+    const bodyContent = Array.from(formData.entries())
+      .map(([key, value]) => `${key}: ${value}`)
+      .join("\n")
+
+    const mailtoLink = `mailto:iem.industryconsulting@gmail.com?subject=Program Application - ${program.title}&body=${encodeURIComponent(`Program: ${program.title}\n\n${bodyContent}`)}`
+    window.location.href = mailtoLink
+    
+    setIsApplyDialogOpen(false)
   }
 
   return (
@@ -248,47 +389,7 @@ export default function ProgramDetailContent({ program }: ProgramDetailContentPr
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Mentor Profile */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Program Mentor</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-semibold text-lg">
-                      {program.mentorProfile.name.charAt(0)}
-                    </div>
-                    <div>
-                      <h4 className="font-semibold">{program.mentorProfile.name}</h4>
-                      {program.mentorProfile.linkedin && (
-                        <a
-                          href={program.mentorProfile.linkedin}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 hover:underline text-sm flex items-center gap-1"
-                        >
-                          LinkedIn <ExternalLink className="h-3 w-3" />
-                        </a>
-                      )}
-                    </div>
-                  </div>
-
-                  <p className="text-sm text-gray-700">{program.mentorProfile.bio}</p>
-
-                  <div>
-                    <h5 className="font-semibold mb-2">Expertise</h5>
-                    <div className="flex flex-wrap gap-2">
-                      {program.mentorProfile.expertise.map((skill, index) => (
-                        <Badge key={index} variant="outline" className="text-xs">
-                          {skill}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <ProgramMentorSelector programId={program.id} programTitle={program.title} />
 
             {/* Quick Actions */}
             <Card>
@@ -296,14 +397,51 @@ export default function ProgramDetailContent({ program }: ProgramDetailContentPr
                 <CardTitle>Quick Actions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                {program.status === "Open" && <Button className="w-full">Apply Now</Button>}
+                {program.status === "Open" && (
+                  <Dialog open={isApplyDialogOpen} onOpenChange={setIsApplyDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button className="w-full bg-blue-700 hover:bg-blue-800">Apply Now</Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl">
+                      <DialogHeader>
+                        <DialogTitle>Apply for {program.title}</DialogTitle>
+                        <DialogDescription>
+                          Fill in your details below. Your application will be sent to iem.industryconsulting@gmail.com
+                        </DialogDescription>
+                      </DialogHeader>
+                      <form className="grid grid-cols-1 gap-4 sm:grid-cols-2" onSubmit={handleApplySubmit}>
+                        <div className="sm:col-span-1">
+                          <Label htmlFor="name">Full Name</Label>
+                          <Input id="name" name="name" required placeholder="John Doe" />
+                        </div>
+                        <div className="sm:col-span-1">
+                          <Label htmlFor="email">Email</Label>
+                          <Input id="email" name="email" type="email" required placeholder="john@example.com" />
+                        </div>
+                        <div className="sm:col-span-1">
+                          <Label htmlFor="phone">Phone</Label>
+                          <Input id="phone" name="phone" type="tel" placeholder="+1 (555) 123-4567" />
+                        </div>
+                        <div className="sm:col-span-1">
+                          <Label htmlFor="institution">Institution</Label>
+                          <Input id="institution" name="institution" placeholder="University/Institute" />
+                        </div>
+                        {getProgramSpecificFields()}
+                        <div className="sm:col-span-2 flex items-center justify-end gap-2 pt-2">
+                          <Button type="button" variant="ghost" onClick={() => setIsApplyDialogOpen(false)}>Cancel</Button>
+                          <Button type="submit" className="bg-blue-700 hover:bg-blue-800">Send Application</Button>
+                        </div>
+                      </form>
+                    </DialogContent>
+                  </Dialog>
+                )}
 
                 <Button variant="outline" className="w-full bg-transparent" onClick={handleDownload}>
                   <Download className="h-4 w-4 mr-2" />
                   Download Details
                 </Button>
 
-                <Button variant="outline" className="w-full bg-transparent">
+                <Button variant="outline" className="w-full bg-transparent" disabled title="Contact Lead feature is currently disabled">
                   Contact Program Lead
                 </Button>
               </CardContent>

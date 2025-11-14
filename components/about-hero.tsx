@@ -25,8 +25,8 @@ export default function AboutHero({
   const chips = useMemo(
     () => [
       { label: "70+ Interns", color: "bg-emerald-500/90 text-white" },
-      { label: "25+ Research Projects", color: "bg-blue-700/90 text-white" },
-      { label: "11+ Startups", color: "bg-gray-900/90 text-white" },
+      { label: "10+ Research Projects", color: "bg-blue-700/90 text-white" },
+      { label: "2+ Startups", color: "bg-gray-900/90 text-white" },
     ],
     [],
   )

@@ -8,47 +8,30 @@ export type EventItem = {
   description: string
   category: "Workshop" | "Talk" | "Hackathon" | "Demo Day" | "Meetup"
   speaker?: string
+  registrationDisabled?: boolean
 }
 
 const now = new Date()
 
-export const upcomingEvents: EventItem[] = [
-  {
-    id: "e-up-1",
-    title: "Innovation Workshop: AI for Good",
-    date: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 14).toISOString(),
-    location: "IEMRF Campus Auditorium",
-    image: "/innovation-workshop.png",
-    summary: "Hands-on workshop on building AI solutions for social impact.",
-    description: "Join mentors and peers to ideate and prototype AI solutions addressing healthcare, education, and sustainability challenges.",
-    category: "Workshop",
-    speaker: "Dr. Anita Sharma",
-  },
-  {
-    id: "e-up-2",
-    title: "Startup Demo Day",
-    date: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 28).toISOString(),
-    location: "IEMRF Incubation Center",
-    image: "/startup-bootcamp-session.png",
-    summary: "Student-led startups pitch to mentors and partners.",
-    description: "Come see early-stage products, get inspired, and network with teams, mentors, and partners.",
-    category: "Demo Day",
-    speaker: "Panel of Mentors",
-  },
-]
+export const upcomingEvents: EventItem[] = []
 
 export const pastEvents: EventItem[] = [
   {
     id: "e-pa-1",
-    title: "Mentorship Meetup: From Idea to MVP",
-    date: new Date(now.getFullYear(), now.getMonth() - 1, 12).toISOString(),
-    location: "Online",
-    image: "/mentorship-session.png",
-    summary: "Best practices for getting from concept to MVP.",
-    description: "Experienced mentors shared hard-won lessons on validating ideas, building MVPs, and finding early adopters.",
-    category: "Meetup",
-    speaker: "IEM Alumni Mentors",
+    title: "Agile Project Management: Empowering Excellence Through Knowledge",
+    date: new Date(now.getFullYear(), now.getMonth() - 8, 12).toISOString(),
+    location: "offline - IEMRF Conference Room",
+    image: "/agile.png",
+    summary:
+      "A hands-on workshop designed to introduce Agile methodologies, frameworks, and tools for modern project execution and adaptability.",
+    description: "This interactive workshop introduced participants to Agile Project Management (APM) — an iterative, collaborative, and flexible approach to managing projects, especially in software development. Participants explored how Agile helps teams deliver value quickly, adapt to change, and maintain continuous customer feedback.",
+
+
+    category: "Workshop",
+    speaker: "Biswajit Chaki",
+    registrationDisabled: true,
   },
+
   {
     id: "e-pa-2",
     title: "Research Talk: AI in Healthcare",
@@ -59,6 +42,7 @@ export const pastEvents: EventItem[] = [
     description: "Faculty and students presented ongoing research work with demonstrations and posters.",
     category: "Talk",
     speaker: "Prof. S. Banerjee",
+    registrationDisabled: true,
   },
 ]
 

@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import type { EventItem } from "@/lib/events-data"
@@ -8,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import DownloadButton from "@/components/download-button"
 import { getProjectDownloadUrl } from "@/lib/downloads"
+import { getPptForEvent } from "@/lib/event-downloads"
 import { findPersonByName } from "@/lib/people"
 
 export function EventCard({ event, isUpcoming = false }: { event: EventItem; isUpcoming?: boolean }) {
@@ -39,30 +42,64 @@ export function EventCard({ event, isUpcoming = false }: { event: EventItem; isU
               Learn more →
             </Link>
             {isUpcoming && (
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button className="h-8 px-3 text-xs bg-emerald-600 hover:bg-emerald-700 text-white">Register</Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-lg">
-                  <DialogHeader>
-                    <DialogTitle>Register: {event.title}</DialogTitle>
-                    <DialogDescription>Fill your details to register for this event.</DialogDescription>
-                  </DialogHeader>
-                  <form className="grid grid-cols-1 gap-3" onSubmit={(e) => e.preventDefault()}>
-                    <Input placeholder="Full name" required />
-                    <Input type="email" placeholder="Email" required />
-                    <Input placeholder="Organization (optional)" />
-                    <Textarea rows={4} placeholder="What interests you about this event?" />
-                    <div className="flex items-center justify-end gap-2">
-                      <Button type="button" variant="ghost">Cancel</Button>
-                      <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700 text-white">Submit</Button>
-                    </div>
-                  </form>
-                </DialogContent>
-              </Dialog>
+              // If registrationDisabled flag is set on the event, render disabled button
+              (event.registrationDisabled) ? (
+                <Button className="h-8 px-3 text-xs bg-emerald-400 text-white" disabled>
+                  Register
+                </Button>
+              ) : (
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button className="h-8 px-3 text-xs bg-emerald-600 hover:bg-emerald-700 text-white">Register</Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-lg">
+                    <DialogHeader>
+                      <DialogTitle>Register: {event.title}</DialogTitle>
+                      <DialogDescription>Fill your details to register for this event.</DialogDescription>
+                    </DialogHeader>
+                    <form className="grid grid-cols-1 gap-3" onSubmit={(e) => e.preventDefault()}>
+                      <Input placeholder="Full name" required />
+                      <Input type="email" placeholder="Email" required />
+                      <Input placeholder="Organization (optional)" />
+                      <Textarea rows={4} placeholder="What interests you about this event?" />
+                      <div className="flex items-center justify-end gap-2">
+                        <Button type="button" variant="ghost">Cancel</Button>
+                        <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700 text-white">Submit</Button>
+                      </div>
+                    </form>
+                  </DialogContent>
+                </Dialog>
+              )
             )}
             <div className="w-full mt-2">
-              <DownloadButton href={getProjectDownloadUrl("event", event.id)} />
+              <DownloadButton
+                onClick={async () => {
+                  // Try PPT mapping first
+                  try {
+                    const ppt = getPptForEvent(event.id, event.title)
+                    if (ppt) {
+                      const link = document.createElement("a")
+                      link.href = ppt
+                      const parts = ppt.split("/")
+                      link.download = parts[parts.length - 1] || `${event.id}-details.pptx`
+                      document.body.appendChild(link)
+                      link.click()
+                      document.body.removeChild(link)
+                      return
+                    }
+                  } catch (err) {
+                    console.warn("Error checking event PPT mapping", err)
+                  }
+
+                  // Fallback: generate PDF of the event page
+                  try {
+                    const { downloadPagePdf } = await import("@/components/download-utils")
+                    await downloadPagePdf(`/events/${event.id}`, `${event.title.replace(/\s+/g, "-").toLowerCase()}-details.pdf`)
+                  } catch (err) {
+                    console.error("Failed to download event page PDF", err)
+                  }
+                }}
+              />
             </div>
           </div>
         </div>

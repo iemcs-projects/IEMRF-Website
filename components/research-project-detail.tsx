@@ -8,7 +8,7 @@ import { Download, Calendar, Users, DollarSign, ExternalLink, ArrowLeft } from "
 import type { ResearchProject } from "@/lib/research-data"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { findPersonByName } from "@/lib/people"
 import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card"
@@ -63,23 +63,73 @@ export function ResearchProjectDetail({ project }: Props) {
   const [previewSrc, setPreviewSrc] = useState<string | null>(null)
   const visuals = project.visuals || []
 
-  const handleDownload = () => {
-    const projectData = {
-      ...project,
-      downloadDate: new Date().toISOString(),
+  const handleDownload = async () => {
+    // If there's a registered PPT for this project, download it directly from public path
+    try {
+      const { getPptForProject } = await import("@/lib/research-downloads")
+      const ppt = getPptForProject(project.id, project.title)
+      if (ppt) {
+        const link = document.createElement("a")
+        link.href = ppt
+        // Keep the original filename if present, otherwise create one
+        const parts = ppt.split("/")
+        link.download = parts[parts.length - 1] || `${project.id}-details.pptx`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        return
+      }
+    } catch (err) {
+      console.warn("Could not check PPT mapping:", err)
     }
 
-    const dataStr = JSON.stringify(projectData, null, 2)
-    const dataBlob = new Blob([dataStr], { type: "application/json" })
-    const url = URL.createObjectURL(dataBlob)
-    const link = document.createElement("a")
-    link.href = url
-    link.download = `${project.id}-research-details.json`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    URL.revokeObjectURL(url)
+    // Fallback: generate a PDF of the research project page
+    try {
+      const { downloadPagePdf } = await import("@/components/download-utils")
+      const safeFileName = `${project.title.replace(/\s+/g, "-").toLowerCase()}-details.pdf`
+      await downloadPagePdf(`/research/${project.id}`, safeFileName)
+    } catch (err) {
+      console.error("Download failed:", err)
+      // As a last fallback, offer JSON data export
+      const projectData = {
+        ...project,
+        downloadDate: new Date().toISOString(),
+      }
+
+      const dataStr = JSON.stringify(projectData, null, 2)
+      const dataBlob = new Blob([dataStr], { type: "application/json" })
+      const url = URL.createObjectURL(dataBlob)
+      const link = document.createElement("a")
+      link.href = url
+      link.download = `${project.id}-research-details.json`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      URL.revokeObjectURL(url)
+    }
   }
+
+  // If the page is opened with ?download=1, trigger the download flow
+  // and then clean the URL so users don't see the query param.
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    
+    const searchParams = new URLSearchParams(window.location.search)
+    const downloadParam = searchParams.get("download")
+    
+    if (downloadParam) {
+      ;(async () => {
+        try {
+          await handleDownload()
+        } catch (e) {
+          console.error("Auto-download failed:", e)
+        } finally {
+          // Clean up the URL by removing the download query param
+          window.history.replaceState({}, document.title, `/research/${project.id}`)
+        }
+      })()
+    }
+  }, [project.id])
 
   return (
     <div className="space-y-8">

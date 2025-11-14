@@ -83,13 +83,16 @@ export default function ResearchContent() {
         <h2 className="text-xl font-semibold">Research Areas</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {(data?.areas || []).map((a) => (
-            <Card key={a.id} className="border-blue-100">
+            <Card
+              key={a.id}
+              className="border-blue-100 group overflow-hidden relative transform transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-blue-200/30"
+            >
+              {/* Decorative gradient accent that appears on hover */}
+              <div className="absolute -top-6 left-0 w-full h-6 bg-gradient-to-r from-transparent via-blue-200/40 to-transparent opacity-0 group-hover:opacity-100 transform-gpu transition-opacity duration-500 pointer-events-none" />
+
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-base">{a.name}</CardTitle>
-                  <Badge variant="secondary" className="text-xs">
-                    {data?.stats.areasCount.find((x) => x.area === a.name)?.count ?? 0} projects
-                  </Badge>
                 </div>
               </CardHeader>
               <CardContent className="text-sm text-muted-foreground">{a.description}</CardContent>

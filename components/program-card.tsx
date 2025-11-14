@@ -90,15 +90,7 @@ export function ProgramCard({ program, floatDelay = 0 }: { program: Program; flo
           ))}
         </div>
 
-        {resolvedMentor && program.id !== "p-res-01" ? (
-          <div className="absolute top-2 left-2 z-20 bg-white/90 backdrop-blur px-2 py-1 rounded-md shadow-sm flex items-center gap-2">
-            <Avatar className="h-6 w-6">
-              <AvatarImage src={resolvedMentor.image} alt={resolvedMentor.name} />
-              <AvatarFallback>{resolvedMentor.name.split(" ").map((p) => p[0]).slice(0,2).join("")}</AvatarFallback>
-            </Avatar>
-            <span className="text-xs text-gray-800">{resolvedMentor.name}</span>
-          </div>
-        ) : null}
+        {null}
 
         {isHovered && (
           <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-1 z-20">
@@ -157,7 +149,6 @@ export function ProgramCard({ program, floatDelay = 0 }: { program: Program; flo
           <div className="mb-4 flex flex-wrap items-center gap-3 text-xs text-gray-600">
             <span className="rounded bg-gray-50 px-2 py-1">Duration: {program.duration}</span>
             <span className="rounded bg-gray-50 px-2 py-1">Mode: {program.mode}</span>
-            <span className="rounded bg-gray-50 px-2 py-1">Mentor: {program.mentor}</span>
           </div>
 
           <div className="flex items-center justify-between">
@@ -182,7 +173,28 @@ export function ProgramCard({ program, floatDelay = 0 }: { program: Program; flo
           </div>
 
           <div className="mt-3 grid grid-cols-1 gap-2">
-            <DownloadButton href={getProjectDownloadUrl("program", program.id)} />
+            <DownloadButton
+              onClick={async () => {
+                try {
+                  const { downloadProgramPdf } = await import("@/components/download-utils")
+                  await downloadProgramPdf(program.id, program.title)
+                } catch (err) {
+                  console.error("Failed to download program PDF", err)
+                  // fallback: try opening canonical download URL
+                  try {
+                    const url = getProjectDownloadUrl("program", program.id)
+                    const a = document.createElement("a")
+                    a.href = url
+                    a.download = url.split("/").pop() || `${program.id}-details.pdf`
+                    document.body.appendChild(a)
+                    a.click()
+                    document.body.removeChild(a)
+                  } catch (e) {
+                    console.error("Fallback download failed", e)
+                  }
+                }
+              }}
+            />
           </div>
         </div>
       </div>

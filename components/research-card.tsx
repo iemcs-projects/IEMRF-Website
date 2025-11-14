@@ -3,6 +3,7 @@
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import DownloadButton from "@/components/download-button"
 import type { ResearchProject } from "@/lib/research-data"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
@@ -109,11 +110,43 @@ export function ResearchCard({ project }: Props) {
         ) : null}
 
         <div className="mt-auto pt-4">
-          <Link href={`/research/${project.id}`}>
-            <Button variant="default" size="sm" className="w-full font-semibold ring-2 ring-blue-500 ring-offset-2">
-              Read More
-            </Button>
-          </Link>
+          <div className="grid grid-cols-2 gap-2">
+            <Link href={`/research/${project.id}`}>
+              <Button variant="default" size="sm" className="w-full font-semibold ring-2 ring-blue-500 ring-offset-2">
+                Read More
+              </Button>
+            </Link>
+            <DownloadButton
+              onClick={async () => {
+                // Try PPT mapping first, then fallback to PDF snapshot of the research page
+                try {
+                  const { getPptForProject } = await import("@/lib/research-downloads")
+                  const ppt = getPptForProject(project.id, project.title)
+                  if (ppt) {
+                    const link = document.createElement("a")
+                    link.href = ppt
+                    const parts = ppt.split("/")
+                    link.download = parts[parts.length - 1] || `${project.id}-details.pptx`
+                    document.body.appendChild(link)
+                    link.click()
+                    document.body.removeChild(link)
+                    return
+                  }
+                } catch (err) {
+                  console.warn("Could not check PPT mapping:", err)
+                }
+
+                try {
+                  // Instead of trying to snapshot the page in an iframe from the card,
+                  // navigate to the project page with a download query param.
+                  // The project detail page will auto-trigger the PDF generation.
+                  window.location.href = `/research/${project.id}?download=1`
+                } catch (err) {
+                  console.error("Navigation to project failed:", err)
+                }
+              }}
+            />
+          </div>
         </div>
       </CardContent>
     </Card>

@@ -21,9 +21,22 @@ export function ContactForm() {
         body: JSON.stringify(values),
       })
       const json = await res.json()
-      if (!res.ok || !json.ok) throw new Error(json.error || "Submission failed")
-      toast({ title: "Thanks!", description: "We received your message and will respond shortly." })
-      setValues({ name: "", email: "", message: "" })
+      if (res.ok && json.ok) {
+        toast({ title: "Thanks!", description: "We received your message and will respond shortly." })
+        setValues({ name: "", email: "", message: "" })
+      } else if (json && json.mailto) {
+        // SMTP not configured on server or send failed — open user's mail client
+        const to = "iem.industryconsulting@gmail.com"
+        const subject = `Contact from ${values.name || "Website visitor"}`
+        const body = `Name: ${values.name}\nEmail: ${values.email}\n\n${values.message}`
+        const mailto = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+        // Open mail client for user to send from their own email account
+        window.location.href = mailto
+        toast({ title: "Open mail client", description: "Your email client will open so you can send the message." })
+        setValues({ name: "", email: "", message: "" })
+      } else {
+        throw new Error(json?.error || "Submission failed")
+      }
     } catch (e: any) {
       toast({ title: "Error", description: e.message || "Something went wrong." })
     } finally {
