@@ -262,8 +262,8 @@ export default function DynamicHero() {
           </div>
         </div>
 
-        {/* Partnership Highlights - Top Right */}
-        <div className="absolute top-6 right-6 lg:right-10 z-10 flex flex-col items-end gap-3">
+        {/* Partnership Highlights - Top Right (hidden on small screens; mobile uses dropdown below) */}
+        <div className="hidden sm:absolute sm:top-6 sm:right-6 sm:lg-right-10 sm:z-10 sm:flex sm:flex-col sm:items-end sm:gap-3">
           <div className="flex flex-wrap justify-end gap-3">
             <div className="bg-white/90 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg border border-white/20 animate-pulse-slow">
               <div className="flex items-center gap-2">
@@ -309,6 +309,37 @@ export default function DynamicHero() {
             </div>
             <p className="text-xs text-gray-600 mt-1">Government Partner</p>
           </div>
+        </div>
+
+        {/* Mobile-only highlights dropdown (does not block hero) */}
+        <div className="sm:hidden mt-6 px-4">
+          <details className="rounded-lg bg-white/95 p-2 shadow-md">
+            <summary className="flex items-center justify-between gap-3 cursor-pointer list-none px-3 py-2 text-sm font-semibold text-gray-900">
+              <span className="inline-flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                Highlights
+              </span>
+              <span className="text-xs text-gray-600">▾</span>
+            </summary>
+            <div className="mt-2 grid grid-cols-2 gap-2">
+              <div className="rounded-md bg-white/90 p-2 shadow-sm">
+                <div className="text-xs font-semibold text-gray-800">Startup India</div>
+                <div className="text-xs text-gray-600">Recognized Partner</div>
+              </div>
+              <div className="rounded-md bg-white/90 p-2 shadow-sm">
+                <div className="text-xs font-semibold text-gray-800">IIT Kharagpur</div>
+                <div className="text-xs text-gray-600">Startup Ecosystem Partner</div>
+              </div>
+              <div className="rounded-md bg-white/90 p-2 shadow-sm">
+                <div className="text-xs font-semibold text-gray-800">Winter Internship</div>
+                <div className="text-xs text-gray-600">Apply Now</div>
+              </div>
+              <div className="rounded-md bg-white/90 p-2 shadow-sm">
+                <div className="text-xs font-semibold text-gray-800">MSME</div>
+                <div className="text-xs text-gray-600">Government Partner</div>
+              </div>
+            </div>
+          </details>
         </div>
 
         {/* Right-side Visionary CTA */}
