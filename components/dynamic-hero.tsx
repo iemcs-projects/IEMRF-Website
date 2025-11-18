@@ -280,7 +280,7 @@ export default function DynamicHero() {
                 <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
                 <span className="text-xs font-semibold text-gray-800 whitespace-nowrap">IIT Kharagpur</span>
               </div>
-              <p className="text-xs text-gray-600 mt-1">Strategic Academic Partner</p>
+              <p className="text-xs text-gray-600 mt-1">Startup Ecosystem Partner</p>
             </div>
             {posterState === "closed" && (
               <button
