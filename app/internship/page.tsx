@@ -76,10 +76,11 @@ function InternshipContentWithParams() {
               </div>
               <button
                 type="button"
-                onClick={() => setApplyOptionsOpen(true)}
-                className="mt-2 inline-flex h-8 items-center justify-center rounded-md bg-emerald-600 px-3 text-xs font-semibold text-white shadow transition hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/80"
+                disabled
+                aria-disabled
+                className="mt-2 inline-flex h-8 items-center justify-center rounded-md bg-gray-400 px-3 text-xs font-semibold text-white shadow cursor-not-allowed"
               >
-                Apply for Internship
+                Applications Closed
               </button>
             </div>
           </div>

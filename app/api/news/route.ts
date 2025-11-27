@@ -4,9 +4,10 @@ export async function GET() {
   const news = [
     {
       id: "winter-internship",
-      title: "Winter Internship 2025 Is Open — Apply Now",
+      title: "Winter Internship 2025 — Closed",
       date: "2025-12-01",
-      summary: "Our flagship winter internship is accepting applications. Secure your spot to work with mentors across AI, IoT, and product innovation.",
+      status: "closed",
+      summary: "The Winter Internship 2025 cycle is now closed. Thank you to all applicants — selected candidates have been contacted. See the detailed update for outcomes and next steps.",
     },
     {
       id: "iit-collaboration",

@@ -10,7 +10,7 @@ type ScrollingBannerProps = {
 }
 
 export default function ScrollingBanner({
-  text = "Apply for Winter Internship 2025 🚀| Applications are open now! | Gain Real Industrial Experience & Build Your Future Today! 🔧✨",
+  text = "Explore Research, Startups & Programs — Discover collaboration opportunities, mentorship, and resources at IEMRF.",
   className,
   speedSeconds = 28,
   href,

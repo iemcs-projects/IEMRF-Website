@@ -25,24 +25,14 @@ export default function DynamicHero() {
   const [index, setIndex] = useState(0)
   const [mounted, setMounted] = useState(false)
   const timerRef = useRef<number | null>(null)
-  const [posterState, setPosterState] = useState<"open" | "closing" | "closed">("open")
-  const closeTimeoutRef = useRef<number | null>(null)
   const router = useRouter()
 
   const current = useMemo(() => IMAGES[index % IMAGES.length], [index])
   useEffect(() => {
-    return () => {
-      if (closeTimeoutRef.current) window.clearTimeout(closeTimeoutRef.current)
-    }
+    return () => {}
   }, [])
 
-  const handleClosePoster = () => {
-    if (posterState !== "open") return
-    setPosterState("closing")
-    closeTimeoutRef.current = window.setTimeout(() => {
-      setPosterState("closed")
-    }, 550)
-  }
+  // poster removed (winter internship closed) - no-op placeholder kept intentionally
 
   const handleApplyClick = () => {
     router.push("/internship?highlight=apply")
@@ -101,76 +91,7 @@ export default function DynamicHero() {
   return (
     <section aria-labelledby="hero-heading" className="relative isolate overflow-hidden">
       {/* Winter Internship Poster Popup */}
-      {posterState !== "closed" && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/70 backdrop-blur-sm px-4">
-          <div
-            className={`relative w-full max-w-3xl overflow-hidden rounded-3xl bg-white shadow-2xl transition-all duration-500 ease-out ${
-              posterState === "closing" ? "translate-x-[60vw] scale-50 opacity-0" : "translate-x-0 scale-100 opacity-100"
-            }`}
-          >
-            <button
-              type="button"
-              onClick={handleClosePoster}
-              aria-label="Close winter internship poster"
-              className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/80 text-gray-700 shadow-md transition hover:bg-white"
-            >
-              ×
-            </button>
-            <div className="grid gap-6 bg-gradient-to-br from-blue-700 via-blue-500 to-emerald-500 px-6 pb-8 pt-12 md:grid-cols-[1.2fr_1fr] md:px-10 md:pb-12 md:pt-16">
-              <div className="space-y-5 text-white">
-                <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-wider shadow ring-1 ring-white/40">
-                  ❄ Winter Internship 2025
-                </span>
-                <h2 className="text-3xl font-bold leading-tight md:text-4xl">
-                  Winter Internship 2025 – Applications Open Now!
-                </h2>
-                <p className="max-w-xl text-sm leading-6 text-white/90 md:text-base">
-                  Gain hands-on industrial experience, work with expert mentors, and kickstart your professional journey
-                  with real-world research and product challenges.
-                </p>
-                <div className="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-wide text-white/80">
-                  <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1">
-                    🚀 Industry Projects
-                  </span>
-                  <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1">
-                    🧠 Expert Mentors
-                  </span>
-                  <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1">
-                    📍 Hybrid & Onsite
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  onClick={handleApplyClick}
-                  className="inline-flex h-11 items-center justify-center rounded-lg bg-white px-6 text-sm font-semibold text-blue-700 shadow-lg transition hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
-                >
-                  Click Here to Apply
-                </button>
-              </div>
-              <div className="relative hidden h-full w-full rounded-2xl bg-white/10 shadow-inner md:block">
-                <div className="absolute inset-2 rounded-2xl overflow-hidden">
-                  <img
-                    src="/images/hero-technology.jpg"
-                    alt="Students collaborating during winter internship"
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="absolute bottom-4 left-4 right-4 flex gap-3 rounded-xl bg-white/90 p-4 shadow-lg">
-                  <img
-                    src="/images/hero-innovation.jpg"
-                    alt="Innovation lab"
-                    className="h-14 w-14 rounded-lg object-cover"
-                  />
-                  <div className="text-xs text-slate-700">
-                    <p className="font-semibold text-blue-700">Hands-on Lab Immersion</p>
-                    <p>Experience industry workflows, mentor roundtables, and rapid prototyping sprints.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Winter internship poster removed from hero (closed). Details preserved in News read-more. */}
       <div className="absolute inset-0 -z-10">
         {IMAGES.map((image, i) => (
           <div
@@ -282,22 +203,7 @@ export default function DynamicHero() {
               </div>
               <p className="text-xs text-gray-600 mt-1">Startup Ecosystem Partner</p>
             </div>
-            {posterState === "closed" && (
-              <button
-                type="button"
-                onClick={handleApplyClick}
-                className="group flex items-center gap-2 rounded-lg border border-emerald-400 bg-white/95 px-4 py-3 text-left shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-              >
-                <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/90 text-white">
-                  💼
-                  <span className="pointer-events-none absolute inset-0 rounded-full border border-white/70 animate-[pulse_1.2s_ease-in-out_infinite]" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-emerald-600">Winter Internship</span>
-                  <span className="text-xs text-gray-600 group-hover:text-emerald-600">Click Here to Apply</span>
-                </div>
-              </button>
-            )}
+            {/* winter internship badge removed from top-right hero (moved to News read-more) */}
           </div>
           <div
             className="bg-white/90 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg border border-white/20 animate-pulse-slow flex-shrink-0"

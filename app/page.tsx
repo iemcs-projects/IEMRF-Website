@@ -13,9 +13,9 @@ export default function HomePage() {
       <SiteHeader />
       <DynamicHero />
       <ScrollingBanner
-        text="Apply for Winter Internship 2025 🚀| Applications are open now! | Gain Real Industrial Experience & Build Your Future Today! 🔧✨"
+        text="Explore Research, Startups & Programs — Discover collaboration opportunities, mentorship, and resources at IEMRF."
         speedSeconds={24}
-        href="/news#winter-internship"
+        href="/news"
       />
 
       <section className="mx-auto max-w-6xl px-4 py-12">

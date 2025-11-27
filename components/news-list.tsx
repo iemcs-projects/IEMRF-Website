@@ -11,6 +11,7 @@ type NewsItem = {
   title: string
   date: string
   summary: string
+  status?: string
 }
 
 export function NewsList() {
@@ -50,7 +51,7 @@ export function NewsList() {
             ? "linear-gradient(135deg, #fff 0%, #d1fae5 35%, #ecfeff 100%)"
             : "linear-gradient(135deg, #fff 0%, #ede9fe 35%, #f5f3ff 100%)"
           const blinkClass = isCurrent ? "animate-blink-fast" : "animate-blink"
-          const readMoreLink = n.id === "winter-internship" ? "/internship?highlight=apply" : undefined
+          const readMoreLink = `/news/${n.id}`
           return (
             <li
               key={n.id}
@@ -110,7 +111,7 @@ export function NewsList() {
                     boxShadow: `0 4px 12px ${accent}44`,
                   }}
                 >
-                  {isCurrent ? "Ongoing" : "Update"}
+                  {n.status ? (n.status === "closed" ? "Closed" : n.status) : (isCurrent ? "Ongoing" : "Update")}
                 </span>
               </div>
               <h3
