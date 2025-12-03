@@ -71,7 +71,7 @@ export default function DynamicHero() {
       setIndex((i) => (i + 1) % IMAGES.length)
     }, 4000)
     // Always show the poster on page load. Preload both possible filenames.
-    const candidates = ["/IgniteHub1.jpg", "/IgniteHub Poster - IEM_page-0001.jpg"]
+    const candidates = ["/IgniteHub.jpg", "/IgniteHub Poster - IEM_page-0001.jpg"]
     let loaded = false
     for (const src of candidates) {
       const img = new Image()
@@ -90,6 +90,18 @@ export default function DynamicHero() {
       if (timerRef.current) window.clearInterval(timerRef.current)
     }
   }, [])
+
+  // Lock body scroll when poster is visible
+  useEffect(() => {
+    if (posterVisible) {
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = "unset"
+    }
+    return () => {
+      document.body.style.overflow = "unset"
+    }
+  }, [posterVisible])
 
   const containerRef = useRef<HTMLDivElement | null>(null)
   const onMouseMove = (e: React.MouseEvent) => {
@@ -111,9 +123,9 @@ export default function DynamicHero() {
 
   return (
     <section aria-labelledby="hero-heading" className="relative isolate overflow-hidden">
-      {/* IgniteHub Poster Popup (appears once per session; minimizes to badge when closed) */}
+      {/* IgniteHub Poster Popup (fixed in place; body scroll locked while visible) */}
       {posterVisible && posterSrc && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 overflow-hidden">
           <div
             className={"relative w-full rounded-lg bg-white/95 shadow-2xl flex items-center justify-center p-4 poster-modal-wrapper" +
               (posterClosing ? " poster-slide-out" : "")}
