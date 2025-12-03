@@ -31,11 +31,42 @@ export default function NewsDetailPage({ params }: { params: { id: string } }) {
 
       <article className="space-y-6">
         <div className="rounded-lg overflow-hidden shadow-sm">
-          <img src="/images/hero-technology.jpg" alt={item.title} className="w-full object-cover max-h-64" />
+          {item.id === "ignitehub" ? (
+            <img
+              src="/IgniteHub.jpg"
+              onError={(e) => {
+                try {
+                  ;(e.target as HTMLImageElement).src = "/IgniteHub Poster - IEM_page-0001.jpg"
+                } catch (err) {}
+              }}
+              alt={item.title}
+              className="w-full object-cover max-h-64"
+            />
+          ) : (
+            <img src="/images/hero-technology.jpg" alt={item.title} className="w-full object-cover max-h-64" />
+          )}
         </div>
 
         <div className="prose max-w-none">
           <p>{item.summary}</p>
+          {item.content && (
+            <div className="mt-4">
+              <p>{item.content}</p>
+            </div>
+          )}
+          {item.poster && (
+            <section className="mt-6 rounded-lg border bg-white p-4 shadow-sm">
+              <h3 className="text-lg font-semibold">Poster</h3>
+              <div className="mt-3 rounded overflow-hidden">
+                <a href={item.poster} target="_blank" rel="noreferrer">
+                  <img src={item.poster} alt="Poster" className="w-full object-contain max-h-96" />
+                </a>
+                <div className="mt-2">
+                  <a href={item.poster} download className="text-sm text-blue-600 hover:underline">Download poster</a>
+                </div>
+              </div>
+            </section>
+          )}
           {item.status === "closed" && (
             <div className="mt-4 rounded-md bg-gray-100 p-4 text-sm text-gray-800">
               <strong>Update:</strong> This program is now closed. Selected candidates have been contacted.

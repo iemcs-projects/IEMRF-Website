@@ -3,6 +3,15 @@ import { NextResponse } from "next/server"
 export async function GET() {
   const news = [
     {
+      id: "ignitehub",
+      title: "IgniteHub Launched to Accelerate Innovation",
+      date: "2025-12-05",
+      status: "active",
+      summary: "Announcing IgniteHub - our new initiative to accelerate innovation.",
+      poster: "/IgniteHub.jpg",
+      content: `IEM Research Foundation (IEMRF) announces the SUPER-40 Winter Internship 2025 - 2nd Edition, kicking off on 5th December 2025 at IIT KGP Research Park. The event features thought-provoking dialogues, startup showcases, interactive hubs, and exciting networking opportunities for young innovators!`,
+    },
+    {
       id: "winter-internship",
       title: "Winter Internship 2025 - Closed",
       date: "2025-11-15",

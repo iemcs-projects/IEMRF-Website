@@ -24,6 +24,11 @@ const IMAGES = [
 export default function DynamicHero() {
   const [index, setIndex] = useState(0)
   const [mounted, setMounted] = useState(false)
+  const [posterVisible, setPosterVisible] = useState(false)
+  const [posterClosed, setPosterClosed] = useState(false)
+  const [posterSrc, setPosterSrc] = useState<string | null>(null)
+  const [posterClosing, setPosterClosing] = useState(false)
+  const POSTER_SESSION_KEY = "ignitehub-poster-closed"
   const timerRef = useRef<number | null>(null)
   const router = useRouter()
 
@@ -65,6 +70,22 @@ export default function DynamicHero() {
     timerRef.current = window.setInterval(() => {
       setIndex((i) => (i + 1) % IMAGES.length)
     }, 4000)
+    // Always show the poster on page load. Preload both possible filenames.
+    const candidates = ["/IgniteHub.jpg", "/IgniteHub Poster - IEM_page-0001.jpg"]
+    let loaded = false
+    for (const src of candidates) {
+      const img = new Image()
+      img.onload = () => {
+        if (!loaded) {
+          loaded = true
+          setPosterSrc(src)
+          setPosterVisible(true)
+          setPosterClosed(true)
+        }
+      }
+      img.onerror = () => {}
+      img.src = src
+    }
     return () => {
       if (timerRef.current) window.clearInterval(timerRef.current)
     }
@@ -90,8 +111,31 @@ export default function DynamicHero() {
 
   return (
     <section aria-labelledby="hero-heading" className="relative isolate overflow-hidden">
-      {/* Winter Internship Poster Popup */}
-      {/* Winter internship poster removed from hero (closed). Details preserved in News read-more. */}
+      {/* IgniteHub Poster Popup (appears once per session; minimizes to badge when closed) */}
+      {posterVisible && posterSrc && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+          <div
+            className={"relative w-full rounded-lg bg-white/95 shadow-2xl flex items-center justify-center p-4 poster-modal-wrapper" +
+              (posterClosing ? " poster-slide-out" : "")}
+            style={{ maxWidth: "680px" }}
+          >
+            <button
+              aria-label="Close poster"
+              onClick={() => {
+                setPosterClosing(true)
+                setTimeout(() => {
+                  setPosterClosing(false)
+                  setPosterVisible(false)
+                }, 480)
+              }}
+              className="absolute right-3 top-3 z-50 inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/80 text-white text-lg shadow-lg focus:outline-none"
+            >
+              ×
+            </button>
+            <img src={posterSrc || ""} alt="IgniteHub Poster" className="block w-full rounded-md object-contain max-h-[60vh]" />
+          </div>
+        </div>
+      )}
       <div className="absolute inset-0 -z-10">
         {IMAGES.map((image, i) => (
           <div
@@ -204,6 +248,22 @@ export default function DynamicHero() {
               <p className="text-xs text-gray-600 mt-1">Startup Ecosystem Partner</p>
             </div>
             {/* winter internship badge removed from top-right hero (moved to News read-more) */}
+            {/* IgniteHub badge: show minimized blinking badge when poster closed in this session */}
+            {posterClosed && posterSrc && (
+              <button
+                onClick={() => {
+                  router.push("/news/ignitehub")
+                }}
+                aria-label="Open IgniteHub news"
+                className="ml-2 inline-flex items-center gap-2 rounded-full bg-white/95 px-3 py-2 shadow-lg border border-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+              >
+                <span className="relative flex h-3 w-3 items-center justify-center">
+                  <span className="absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-60 animate-ping" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-amber-500" />
+                </span>
+                <span className="text-xs font-semibold text-gray-800">IgniteHub</span>
+              </button>
+            )}
           </div>
           <div
             className="bg-white/90 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg border border-white/20 animate-pulse-slow flex-shrink-0"
@@ -420,6 +480,11 @@ export default function DynamicHero() {
         .animate-burst-delayed { animation: burst 1400ms ease-out 1; animation-delay: 0.25s; }
         @keyframes pulse-slow { 0%,100% { opacity: .6 } 50% { opacity: 1 } }
         .animate-pulse-slow { animation: pulse-slow 2.4s ease-in-out infinite; }
+        .poster-modal-wrapper { transition: transform 480ms ease-in-out, opacity 380ms ease-in-out; }
+        .poster-slide-out { transform: translate(30vw, -25vh) scale(0.18) rotate(-6deg); opacity: 0; }
+        @media (max-width: 640px) {
+          .poster-slide-out { transform: translate(20vw, -20vh) scale(0.18) rotate(-4deg); }
+        }
       `}</style>
     </section>
   )
