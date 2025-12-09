@@ -71,7 +71,7 @@ export default function DynamicHero() {
       setIndex((i) => (i + 1) % IMAGES.length)
     }, 4000)
     // Always show the poster on page load. Preload both possible filenames.
-    const candidates = ["/IgniteHub.jpg", "/IgniteHub Poster - IEM_page-0001.jpg"]
+    const candidates = ["/IgniteHub2.jpg", "/IgniteHub Poster - IEM_page-0001.jpg"]
     let loaded = false
     for (const src of candidates) {
       const img = new Image()

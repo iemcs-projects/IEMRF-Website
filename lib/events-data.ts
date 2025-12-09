@@ -6,14 +6,29 @@ export type EventItem = {
   image?: string
   summary: string
   description: string
-  category: "Workshop" | "Talk" | "Hackathon" | "Demo Day" | "Meetup"
+  category: "Workshop" | "Talk" | "Hackathon" | "Demo Day" | "Meetup" | "Internship Program"
   speaker?: string
   registrationDisabled?: boolean
 }
 
 const now = new Date()
 
-export const upcomingEvents: EventItem[] = []
+export const upcomingEvents: EventItem[] = [
+  {
+    id: "e-ua-1",
+    title: "SUPER-50 Winter Internship 2025 – 2nd Edition",
+    date: "2025-12-05T10:30:00.000Z",
+    location: "IIT KGP Research Park, 7th Floor Classroom",
+    summary: "The kickoff event of the SUPER-50 Winter Internship 2025 brings together top student innovators, esteemed academic leaders, and industry mentors for an immersive internship launch experience.",
+    description:"Hosted by the IEM Research Foundation (IEMRF), the SUPER-50 Winter Internship 2025 – 2nd Edition marks the beginning of a collaborative learning-focused journey for selected participants. The event will feature insightful addresses, technical orientations, startup insights, guest speaker sessions, and mentor-guided project discussions. With a blend of thought leadership, innovation showcases, and interactive networking, this inauguration sets the stage for impactful research throughout the internship program.\n\nAgenda Overview:\n• Student Registration & Welcome\n• Opening Speech\n• Internship & Project Technical Orientation Sessions\n• Guest Speaker Talk & SOP Presentation\n• Super-50 Project Presentation by Mentors\n• Networking Lunch & Group Interactive Internship Session",
+    image: "/Startup_event.png",
+
+    category: "Internship Program",
+    registrationDisabled: true,
+  }
+  
+
+]
 
 export const pastEvents: EventItem[] = [
   {
