@@ -10,7 +10,8 @@ import { Button } from "@/components/ui/button"
 
 export default function StartupsPage() {
   const router = useRouter()
-  const [overlayVisible, setOverlayVisible] = useState(true)
+  // Show startups content by default (remove overlay that hid the page during stealth mode)
+  const [overlayVisible, setOverlayVisible] = useState(false)
 
   return (
     <main className="relative min-h-screen">

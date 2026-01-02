@@ -37,13 +37,27 @@ export function InternshipProjectCard({ project }: { project: InternshipProject 
         <CardTitle className="text-pretty text-lg text-gray-900">
           {project.title}
         </CardTitle>
-        <span
-          className="ml-3 rounded px-2 py-0.5 text-xs font-medium text-white"
-          style={{ background: badgeColor }}
-          aria-label={`Domain: ${project.domain}`}
-        >
-          {project.domain}
-        </span>
+        <div className="ml-3 flex flex-col items-end gap-1">
+          <span
+            className="rounded px-2 py-0.5 text-xs font-medium text-white"
+            style={{ background: badgeColor }}
+            aria-label={`Domain: ${project.domain}`}
+          >
+            {project.domain}
+          </span>
+          <div className="flex items-center gap-2">
+            {project.year && (
+              <span className="rounded px-2 py-0.5 text-xs font-medium text-gray-800 bg-gray-100">
+                {project.year}
+              </span>
+            )}
+            {project.status && (
+              <span className={`rounded px-2 py-0.5 text-xs font-medium text-white ${project.status === 'ongoing' ? 'bg-amber-600' : 'bg-emerald-600'}`}>
+                {project.status === 'ongoing' ? 'Ongoing' : 'Completed'}
+              </span>
+            )}
+          </div>
+        </div>
       </CardHeader>
       <CardContent className="grid gap-3">
         <div className="relative h-40 w-full overflow-hidden rounded">

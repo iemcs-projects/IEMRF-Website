@@ -12,7 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Play, ExternalLink, Users } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import DownloadButton from "@/components/download-button"
@@ -48,12 +48,17 @@ export function StartupCard({ startup }: Props) {
 
   const [imageIndex, setImageIndex] = useState(0)
   const [isHovered, setIsHovered] = useState(false)
+  const [displayIndex, setDisplayIndex] = useState(0)
 
   const dynamicImages = [
     `/startups/${startup.id}.jpg`,
     `/startups/${startup.id}-demo.jpg`,
     `/startups/${startup.id}-team.jpg`,
   ]
+
+  const displayMedia = startup.displayMedia || []
+
+  const videoRef = useRef<HTMLVideoElement | null>(null)
 
   useEffect(() => {
     if (!isHovered) return
@@ -62,6 +67,29 @@ export function StartupCard({ startup }: Props) {
     }, 2000)
     return () => clearInterval(interval)
   }, [isHovered, dynamicImages.length])
+
+  // Play/pause video on hover to show motion instead of static images
+  useEffect(() => {
+    const v = videoRef.current
+    if (!v) return
+    if (isHovered) {
+      v.play().catch(() => {})
+    } else {
+      try {
+        v.pause()
+        v.currentTime = 0
+      } catch (e) {}
+    }
+  }, [isHovered])
+
+  // If there are displayMedia (animated SVGs or short motion videos), cycle them automatically
+  useEffect(() => {
+    if (!displayMedia || displayMedia.length === 0) return
+    const interval = setInterval(() => {
+      setDisplayIndex((i) => (i + 1) % displayMedia.length)
+    }, 2800)
+    return () => clearInterval(interval)
+  }, [displayMedia])
 
   return (
     <Card
@@ -79,23 +107,51 @@ export function StartupCard({ startup }: Props) {
       <div className="relative h-48 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-transparent to-emerald-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
 
-        {dynamicImages.map((img, idx) => (
-          <img
-            key={idx}
-            src={img || "/placeholder.svg"}
-            alt={`${startup.name} ${idx === 0 ? "main" : idx === 1 ? "demo" : "team"} image`}
-            className={cn(
-              "absolute inset-0 h-full w-full object-cover transition-all duration-700",
-              "group-hover:scale-110",
-              idx === imageIndex ? "opacity-100" : "opacity-0",
-            )}
-            onError={(e) => {
-              if (idx > 0) {
-                e.currentTarget.src = `/startups/default-${startup.status}.jpg`
-              }
-            }}
-          />
-        ))}
+        {displayMedia && displayMedia.length > 0 ? (
+          displayMedia.map((src, idx) => (
+            <img
+              key={src}
+              src={src}
+              alt={`${startup.name} motion ${idx + 1}`}
+              className={cn(
+                "absolute inset-0 h-full w-full object-cover transition-opacity duration-700",
+                idx === displayIndex ? "opacity-100 z-10" : "opacity-0 z-0",
+              )}
+            />
+          ))
+        ) : startup.videoUrl ? (
+          <video
+            ref={videoRef}
+            poster={startup.posterUrl || dynamicImages[0]}
+            className="absolute inset-0 h-full w-full object-cover transition-opacity duration-500"
+            muted
+            playsInline
+            loop
+            preload="metadata"
+          >
+            <source src={startup.videoUrl} type="video/mp4" />
+            {/* fallback image */}
+            <img src={startup.posterUrl || dynamicImages[0]} alt={startup.name} />
+          </video>
+        ) : (
+          dynamicImages.map((img, idx) => (
+            <img
+              key={idx}
+              src={img || "/placeholder.svg"}
+              alt={`${startup.name} ${idx === 0 ? "main" : idx === 1 ? "demo" : "team"} image`}
+              className={cn(
+                "absolute inset-0 h-full w-full object-cover transition-all duration-700",
+                "group-hover:scale-110",
+                idx === imageIndex ? "opacity-100" : "opacity-0",
+              )}
+              onError={(e) => {
+                if (idx > 0) {
+                  e.currentTarget.src = `/startups/default-${startup.status}.jpg`
+                }
+              }}
+            />
+          ))
+        )}
 
         {/* Image indicators */}
         {isHovered && (
@@ -252,7 +308,7 @@ export function StartupCard({ startup }: Props) {
         )}
 
         <div className="grid grid-cols-1 gap-2 pt-2">
-          <DownloadButton href={getProjectDownloadUrl("startup", startup.id)} />
+          <DownloadButton href={startup.detailsPath || getProjectDownloadUrl("startup", startup.id)} />
         </div>
 
         {/* Team members */}

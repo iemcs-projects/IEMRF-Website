@@ -1,6 +1,7 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useMemo, useState, useEffect } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { AnimatedSection } from "@/components/animated-section"
@@ -10,9 +11,20 @@ import { pastEvents, upcomingEvents, type EventItem } from "@/lib/events-data"
 type SortKey = "date-asc" | "date-desc" | "title"
 
 export default function EventsPage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const selected = searchParams?.get("selected")
+
   const [query, setQuery] = useState("")
   const [sort, setSort] = useState<SortKey>("date-desc")
   const [tab, setTab] = useState<"all" | "upcoming" | "past">("all")
+
+  useEffect(() => {
+    if (selected) {
+      // Redirect to event detail when ?selected=event-id is present
+      router.push(`/events/${encodeURIComponent(selected)}`)
+    }
+  }, [selected])
 
   const filterSort = (items: EventItem[]) => {
     const q = query.trim().toLowerCase()

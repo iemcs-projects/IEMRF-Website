@@ -5,6 +5,9 @@ export type InternshipProject = {
   domain: string
   description: string
   image?: string
+  season?: "Summer" | "Winter"
+  year?: number
+  status?: "ongoing" | "completed"
 }
 
 export const internshipSummary = {
@@ -13,6 +16,9 @@ export const internshipSummary = {
   mentors: 5,
   domains: 7,
 }
+
+// NOTE: existing projects are currently grouped under the Summer internship (year 2025).
+// You can update season/year/status for each project as desired later.
 
 export const domainCounts = [
   { domain: "AI/ML", interns: 18 },
@@ -32,6 +38,9 @@ export const internshipProjects: InternshipProject[] = [
     domain: "AI/Agentic Automation",
     description: "An AI-powered HR automation system that streamlines recruitment processes. It generates job descriptions from internal requirements, posts openings to platforms like LinkedIn and Indeed, and builds a centralized resume repository. Using configurable factors, the system evaluates and scores resumes out of 100, automatically shortlisting top candidates for interviews — all powered by agentic AI.",
     image: "/Agentic_HR1.jpg",
+    season: "Summer",
+    year: 2025,
+    status: "completed",
   },
   {
     id: "p2",
@@ -40,6 +49,9 @@ export const internshipProjects: InternshipProject[] = [
     domain: "Agentic AI / Content Automation",
     description: "An AI-powered platform designed to assist content creators throughout their entire YouTube journey. It supports ideation, script writing, thumbnail generation, title and description creation, video uploading, and performance analytics — all automated through agentic AI.",
     image: "/YAAS.jpg",
+    season: "Summer",
+    year: 2025,
+    status: "completed",
   },
   {
     id: "p3",
@@ -48,6 +60,9 @@ export const internshipProjects: InternshipProject[] = [
     domain: "Web Development / Financial Simulation",
     description: "A web-based simulation platform for paper trading in the NSE, allowing users to practice trading strategies using virtual funds. After signing up, users receive a fixed amount of dummy money to simulate real-market trading experiences, inspired by platforms like StockGrow and Money Bhai by MoneyControl.",
     image: "/Trading_simulator.jpg",
+    season: "Summer",
+    year: 2025,
+    status: "completed",
   },
   {
     id: "p4",
@@ -56,6 +71,9 @@ export const internshipProjects: InternshipProject[] = [
     domain: "Speech Recognition / NLP",
     description: "An intelligent meeting transcription system that records and transcribes discussions in real time while generating a detailed summary in the form of a Minutes of Meeting (MoM) document. Unlike traditional transcribers, it offers local or cloud deployment options, enhanced accuracy for vernacular languages, and an intuitive, user-friendly interface.",
     image: "/Meeting_transcribe.jpg",
+    season: "Summer",
+    year: 2025,
+    status: "completed",
   },
   {
     id: "p5",
@@ -64,6 +82,9 @@ export const internshipProjects: InternshipProject[] = [
     domain: "Quality & Accreditation",
     description: "The project focuses on implementing NAAC accreditation through Data Validation and Verification (DVV), ensuring institutions achieve transparency, accountability, and efficiency in accreditation. It automates the quality benchmarking process, saving time and reducing manual errors.",
     image: "/NAAC-DVV.png",
+    season: "Summer",
+    year: 2025,
+    status: "completed",
   },
   {
     id: "p6",
@@ -72,6 +93,9 @@ export const internshipProjects: InternshipProject[] = [
     domain: "Healthcare Technology, IoT, Patient Monitoring, Assistive Technology",
     description: "The Patient GPS Tracker is an innovative IoT-based solution that enhances the safety and well-being of dementia patients. It allows caregivers to monitor patients’ real-time locations and movement patterns, providing instant alerts during emergencies to ensure timely assistance and peace of mind.",
     image: "/patient-tracker.png",
+    season: "Summer",
+    year: 2025,
+    status: "completed",
   },
   {
     id: "p7",
@@ -80,6 +104,9 @@ export const internshipProjects: InternshipProject[] = [
     domain: "Human Resource Analytics, Artificial Intelligence (AI), Data Science, Predictive Analytics, Organizational Strategy",
     description: "The project aims to design an AI-driven HR Analytics framework that consolidates fragmented HR data to deliver actionable insights. It focuses on enabling real-time workforce analytics, attrition prediction, and data-based HR strategy formulation to enhance decision-making efficiency.",
     image: "/HR-Analytics.png",
+    season: "Summer",
+    year: 2025,
+    status: "completed",
   },
   {
     id: "p8",
@@ -88,6 +115,31 @@ export const internshipProjects: InternshipProject[] = [
     domain: "Internet of Things (IoT), Healthcare Technology, Embedded Systems, Smart Devices",
     description: "This project focuses on developing a smart pill dispensing system that automates medication reminders and tracks patient adherence in real time. Using IoT sensors and microcontrollers, the system detects pill removal, monitors environmental conditions, and communicates with mobile or cloud-based applications for healthcare tracking.",
     image: "/smart-pill-box.png",
+    season: "Summer",
+    year: 2025,
+    status: "completed",
   },
-
+  // Winter internship placeholders — fill details later
+  {
+    id: "w1",
+    title: "Winter Project A (placeholder)",
+    department: "TBD",
+    domain: "TBD",
+    description: "Placeholder — populate details for winter internship project.",
+    image: "/placeholder.jpg",
+    season: "Winter",
+    year: 2025,
+    status: "ongoing",
+  },
+  {
+    id: "w2",
+    title: "Winter Project B (placeholder)",
+    department: "TBD",
+    domain: "TBD",
+    description: "Placeholder — populate details for winter internship project.",
+    image: "/placeholder.jpg",
+    season: "Winter",
+    year: 2026,
+    status: "completed",
+  },
 ]

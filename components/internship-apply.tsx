@@ -1,6 +1,6 @@
 "use client"
 
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
@@ -56,7 +56,9 @@ export function InternshipApply() {
             <p className="mt-1 text-xs text-muted-foreground">Attach your resume (PDF, up to ~10MB).</p>
           </div>
           <div className="sm:col-span-2 flex items-center justify-end gap-2 pt-2">
-            <Button type="button" variant="ghost">Cancel</Button>
+            <DialogClose asChild>
+              <Button type="button" variant="ghost">Cancel</Button>
+            </DialogClose>
             <Button type="submit" className="bg-emerald-600 text-white hover:bg-emerald-700">Send Application</Button>
           </div>
         </form>

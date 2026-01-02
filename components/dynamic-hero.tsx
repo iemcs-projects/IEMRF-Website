@@ -6,7 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
@@ -24,11 +24,7 @@ const IMAGES = [
 export default function DynamicHero() {
   const [index, setIndex] = useState(0)
   const [mounted, setMounted] = useState(false)
-  const [posterVisible, setPosterVisible] = useState(false)
-  const [posterClosed, setPosterClosed] = useState(false)
-  const [posterSrc, setPosterSrc] = useState<string | null>(null)
-  const [posterClosing, setPosterClosing] = useState(false)
-  const POSTER_SESSION_KEY = "ignitehub-poster-closed"
+  // IgniteHub poster was removed from homepage (event over) — poster is now only served from News
   const timerRef = useRef<number | null>(null)
   const router = useRouter()
 
@@ -70,38 +66,14 @@ export default function DynamicHero() {
     timerRef.current = window.setInterval(() => {
       setIndex((i) => (i + 1) % IMAGES.length)
     }, 4000)
-    // Always show the poster on page load. Preload both possible filenames.
-    const candidates = ["/IgniteHub2.jpg", "/IgniteHub Poster - IEM_page-0001.jpg"]
-    let loaded = false
-    for (const src of candidates) {
-      const img = new Image()
-      img.onload = () => {
-        if (!loaded) {
-          loaded = true
-          setPosterSrc(src)
-          setPosterVisible(true)
-          setPosterClosed(true)
-        }
-      }
-      img.onerror = () => {}
-      img.src = src
-    }
+    // Poster popup withdrawn from homepage (event over) — no preload or auto-show.
     return () => {
       if (timerRef.current) window.clearInterval(timerRef.current)
     }
   }, [])
 
   // Lock body scroll when poster is visible
-  useEffect(() => {
-    if (posterVisible) {
-      document.body.style.overflow = "hidden"
-    } else {
-      document.body.style.overflow = "unset"
-    }
-    return () => {
-      document.body.style.overflow = "unset"
-    }
-  }, [posterVisible])
+  // No body scroll locking required since poster popup is disabled on the homepage.
 
   const containerRef = useRef<HTMLDivElement | null>(null)
   const onMouseMove = (e: React.MouseEvent) => {
@@ -123,31 +95,7 @@ export default function DynamicHero() {
 
   return (
     <section aria-labelledby="hero-heading" className="relative isolate overflow-hidden">
-      {/* IgniteHub Poster Popup (fixed in place; body scroll locked while visible) */}
-      {posterVisible && posterSrc && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 overflow-hidden">
-          <div
-            className={"relative w-full rounded-lg bg-white/95 shadow-2xl flex items-center justify-center p-4 poster-modal-wrapper" +
-              (posterClosing ? " poster-slide-out" : "")}
-            style={{ maxWidth: "680px" }}
-          >
-            <button
-              aria-label="Close poster"
-              onClick={() => {
-                setPosterClosing(true)
-                setTimeout(() => {
-                  setPosterClosing(false)
-                  setPosterVisible(false)
-                }, 480)
-              }}
-              className="absolute right-3 top-3 z-50 inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/80 text-white text-lg shadow-lg focus:outline-none"
-            >
-              ×
-            </button>
-            <img src={posterSrc || ""} alt="IgniteHub Poster" className="block w-full rounded-md object-contain max-h-[60vh]" />
-          </div>
-        </div>
-      )}
+      {/* Poster popup withdrawn — poster available only on News detail page */}
       <div className="absolute inset-0 -z-10">
         {IMAGES.map((image, i) => (
           <div
@@ -260,22 +208,7 @@ export default function DynamicHero() {
               <p className="text-xs text-gray-600 mt-1">Startup Ecosystem Partner</p>
             </div>
             {/* winter internship badge removed from top-right hero (moved to News read-more) */}
-            {/* IgniteHub badge: show minimized blinking badge when poster closed in this session */}
-            {posterClosed && posterSrc && (
-              <button
-                onClick={() => {
-                  router.push("/news/ignitehub")
-                }}
-                aria-label="Open IgniteHub news"
-                className="ml-2 inline-flex items-center gap-2 rounded-full bg-white/95 px-3 py-2 shadow-lg border border-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
-              >
-                <span className="relative flex h-3 w-3 items-center justify-center">
-                  <span className="absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-60 animate-ping" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-amber-500" />
-                </span>
-                <span className="text-xs font-semibold text-gray-800">IgniteHub</span>
-              </button>
-            )}
+            {/* IgniteHub badge removed from hero — poster now only shown in News detail */}
           </div>
           <div
             className="bg-white/90 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg border border-white/20 animate-pulse-slow flex-shrink-0"
@@ -322,7 +255,7 @@ export default function DynamicHero() {
 
         {/* Right-side Visionary CTA */}
         <aside
-          className="pointer-events-auto mt-8 md:mt-0 md:absolute md:top-48 md:right-6 lg:right-10 md:flex md:items-start"
+          className="pointer-events-auto mt-8 md:mt-0 md:absolute md:top-48 md:right-24 lg:right-36 xl:right-44 md:flex md:items-start z-50"
           aria-label="Have a visionary idea"
           style={{ transform: "translateZ(30px)" }}
         >
@@ -391,7 +324,9 @@ export default function DynamicHero() {
                     <Input id="website" name="website" type="url" placeholder="https://…" />
                   </div>
                   <div className="sm:col-span-2 flex items-center justify-end gap-2 pt-2">
-                    <Button type="button" variant="ghost">Cancel</Button>
+                    <DialogClose asChild>
+                      <Button type="button" variant="ghost">Cancel</Button>
+                    </DialogClose>
                     <Button type="submit" className="bg-blue-700 hover:bg-blue-800 text-white">Send</Button>
                   </div>
                 </form>
@@ -407,6 +342,8 @@ export default function DynamicHero() {
             </svg>
           </div>
         </aside>
+
+
 
         <ul className="pointer-events-none relative mt-16 grid grid-cols-2 gap-4 sm:grid-cols-4 md:gap-6">
           {[
@@ -434,6 +371,8 @@ export default function DynamicHero() {
           ))}
         </ul>
       </div>
+
+
 
       <style jsx>{`
         @keyframes pop-in {
@@ -492,11 +431,6 @@ export default function DynamicHero() {
         .animate-burst-delayed { animation: burst 1400ms ease-out 1; animation-delay: 0.25s; }
         @keyframes pulse-slow { 0%,100% { opacity: .6 } 50% { opacity: 1 } }
         .animate-pulse-slow { animation: pulse-slow 2.4s ease-in-out infinite; }
-        .poster-modal-wrapper { transition: transform 480ms ease-in-out, opacity 380ms ease-in-out; }
-        .poster-slide-out { transform: translate(30vw, -25vh) scale(0.18) rotate(-6deg); opacity: 0; }
-        @media (max-width: 640px) {
-          .poster-slide-out { transform: translate(20vw, -20vh) scale(0.18) rotate(-4deg); }
-        }
       `}</style>
     </section>
   )

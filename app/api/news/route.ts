@@ -4,12 +4,12 @@ export async function GET() {
   const news = [
     {
       id: "ignitehub",
-      title: "IgniteHub Launched to Accelerate Innovation",
+      title: "IgniteHub Launch — Highlights",
       date: "2025-12-05",
-      status: "active",
-      summary: "Announcing IgniteHub - our new initiative to accelerate innovation.",
-      poster: "/IgniteHub2.jpg",
-      content: `IEM Research Foundation (IEMRF) announces the SUPER-50 Winter Internship 2025 - 2nd Edition, kicking off on 5th December 2025 at IIT KGP Research Park. The event features thought-provoking dialogues, startup showcases, interactive hubs, and exciting networking opportunities for young innovators!`,
+      status: "closed",
+      summary: "IgniteHub — our initiative to accelerate research-led innovation — concluded successfully. View the poster and event highlights.",
+      poster: "/IgniteHub.jpg",
+      content: `IgniteHub launched to accelerate research-led innovation and startup formation. The program featured seed grants, mentorship tracks, startup showcases, and an open call for early-stage teams. Selected teams received mentorship and prototype funding. See the poster for timeline and contact details.`,
     },
     {
       id: "winter-internship",

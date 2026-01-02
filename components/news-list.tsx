@@ -14,7 +14,13 @@ type NewsItem = {
   status?: string
 }
 
+import { useRouter, useSearchParams } from "next/navigation"
+
 export function NewsList() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const selected = searchParams?.get("selected")
+
   const { data, error, isLoading } = useSWR<{ news: NewsItem[] }>("/api/news", fetcher)
   const [animatedItems, setAnimatedItems] = useState<Set<string>>(new Set())
 
@@ -27,6 +33,17 @@ export function NewsList() {
       })
     }
   }, [data?.news])
+
+  useEffect(() => {
+    if (selected && data?.news) {
+      // navigate to news detail if selected param is present
+      // this keeps behaviour consistent with the ticker (which sets ?selected=...)
+      const found = data.news.find((n) => n.id === selected)
+      if (found) {
+        router.push(`/news/${encodeURIComponent(selected)}`)
+      }
+    }
+  }, [selected, data?.news])
 
   if (error) return <div className="text-sm text-red-600">Failed to load news.</div>
   if (isLoading) return <SkeletonList />
