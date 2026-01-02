@@ -1,3 +1,4 @@
+import React, { Suspense } from "react"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { AnimatedSection } from "@/components/animated-section"
@@ -18,7 +19,9 @@ export default function NewsPage() {
 
       <section className="mx-auto max-w-6xl px-4 py-12">
         <AnimatedSection>
-          <NewsList />
+          <Suspense fallback={<div className="p-6">Loading news…</div>}>
+            <NewsList />
+          </Suspense>
         </AnimatedSection>
       </section>
       <SiteFooter />
