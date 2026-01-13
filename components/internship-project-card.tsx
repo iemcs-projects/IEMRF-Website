@@ -107,7 +107,7 @@ export function InternshipProjectCard({ project }: { project: InternshipProject 
         </div>
         <p className="text-sm leading-6 text-gray-600">{project.description}</p>
         <div className="grid grid-cols-1 gap-2 pt-1">
-          <DownloadButton href={getProjectDownloadUrl("internship", project.id)} />
+          <DownloadButton href={project.detailsPath ? project.detailsPath : getProjectDownloadUrl("internship", project.id)} />
         </div>
       </CardContent>
     </Card>

@@ -32,13 +32,12 @@ export function InternshipContent() {
   const { data, error, isLoading } = useSWR<ApiData>("/api/internships", fetcher)
   const [query, setQuery] = useState("")
   const [domainFilter, setDomainFilter] = useState<string>("All")
-  const [selectedSeason, setSelectedSeason] = useState<"Summer" | "Winter">("Summer")
-  const [selectedYear, setSelectedYear] = useState<number>(2025)
-  const [seasonOpen, setSeasonOpen] = useState<boolean>(false)
+  // Tab state: All | Summer | Winter
+  const [activeTab, setActiveTab] = useState<"All" | "Summer" | "Winter">("All")
 
   const domains = ["All", ...(data?.domainCounts.map((d) => d.domain) || [])]
 
-  const [statusFilter, setStatusFilter] = useState<"All" | "Ongoing">("All")
+  const [selectedDomain, setSelectedDomain] = useState<string | null>(null)
 
   const filteredProjects = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -51,22 +50,57 @@ export function InternshipContent() {
           p.description.toLowerCase().includes(q) ||
           p.domain.toLowerCase().includes(q)
         const matchesDomain = domainFilter === "All" || p.domain === domainFilter
-        const matchesSeason = p.season === selectedSeason
-        const matchesYear = p.year === undefined || p.year === selectedYear
-        const matchesStatus = statusFilter === "All" || (statusFilter === "Ongoing" && p.status === "ongoing")
-        return matchesQuery && matchesDomain && matchesSeason && matchesYear && matchesStatus
+        const matchesTab =
+          activeTab === "All" ||
+          (activeTab === "Summer" && p.season === "Summer" && p.year === 2025) ||
+          (activeTab === "Winter" && p.season === "Winter" && (p.year === 2025 || p.year === 2026))
+        return matchesQuery && matchesDomain && matchesTab
       }) || []
     )
-  }, [data, query, domainFilter, selectedSeason, selectedYear, statusFilter])
+  }, [data, query, domainFilter, activeTab])
 
-  // derive domain counts from filtered projects, but preserve original ordering
+  // Helper: determine a single primary domain label for a project based on patterns
+  function primaryDomainForProject(p: Project) {
+    const domainPatterns: Array<{pattern: RegExp; label: string}> = [
+      { pattern: /\b(ai|machine learning|ml)\b/i, label: "AI/ML" },
+      { pattern: /\b(iot|internet of things)\b/i, label: "IoT" },
+      { pattern: /\b(fintech|financial)\b/i, label: "FinTech" },
+      { pattern: /\b(blockchain|web3|xdc)\b/i, label: "Blockchain" },
+      { pattern: /\b(healthcare|healthtech|medical|patient)\b/i, label: "HealthTech" },
+      { pattern: /\b(web|website|web development)\b/i, label: "Web" },
+      { pattern: /\b(analytics|data science|data)\b/i, label: "Analytics" },
+      { pattern: /\b(edtech|education|naac|accreditation)\b/i, label: "EdTech" },
+      { pattern: /\b(power|led|lighting|driver)\b/i, label: "Power Electronics" },
+      { pattern: /\b(3d|3-d|printing|prototyping)\b/i, label: "3D Printing" },
+      { pattern: /\b(brand|store|memorabilia|retail)\b/i, label: "Brand / Retail" },
+      { pattern: /\b(product|design|prototype)\b/i, label: "Product Design" },
+    ]
+    const text = `${p.domain || ""} ${p.title || ""} ${p.description || ""}`
+    for (const { pattern, label } of domainPatterns) {
+      if (pattern.test(text)) return label
+    }
+    return "Other"
+  }
+
+  // Count primary domain per project (each project counted once)
   const derivedDomainCounts = useMemo(() => {
-    const order = data?.domainCounts.map((d) => d.domain) || []
     const counts = new Map<string, number>()
-    order.forEach((d) => counts.set(d, 0))
-    filteredProjects.forEach((p) => counts.set(p.domain, (counts.get(p.domain) || 0) + 1))
-    return order.map((d) => ({ domain: d, interns: counts.get(d) || 0 }))
-  }, [data, filteredProjects])
+    filteredProjects.forEach((p) => {
+      const d = primaryDomainForProject(p)
+      counts.set(d, (counts.get(d) || 0) + 1)
+    })
+    const arr = Array.from(counts.entries()).map(([domain, interns]) => ({ domain, interns }))
+    arr.sort((a, b) => b.interns - a.interns || a.domain.localeCompare(b.domain))
+    return arr
+  }, [filteredProjects])
+
+  // Projects to display in grid: respect chart selection if any
+  const displayedProjects = useMemo(() => {
+    if (!selectedDomain) return filteredProjects
+    return filteredProjects.filter((p) => primaryDomainForProject(p) === selectedDomain)
+  }, [filteredProjects, selectedDomain])
+
+
 
   const seasonCounts = useMemo(() => {
     const total = data?.projects.length || 0
@@ -147,180 +181,105 @@ export function InternshipContent() {
         ))}
       </div>
 
-      {/* Season selector and collapsible filters */}
+      {/* Tabs and filters (All / Summer / Winter) */}
       <div className="mt-6">
         <div className="flex items-center gap-4">
-          <div className="inline-flex rounded-lg bg-gray-100 p-1 shadow-sm">
+          <div className="flex gap-2" role="tablist" aria-label="Internship season tabs">
             <button
-              type="button"
-              onClick={() => {
-                if (selectedSeason === "Summer") setSeasonOpen((s) => !s)
-                else {
-                  setSelectedSeason("Summer")
-                  setSeasonOpen(true)
-                }
-              }}
-              aria-expanded={selectedSeason === "Summer" && seasonOpen}
-              className={`px-4 py-2 rounded-md text-sm font-medium ${selectedSeason === "Summer" ? (seasonOpen ? "bg-blue-700 text-white" : "bg-white text-gray-800") : "text-gray-700"}`}
+              role="tab"
+              aria-selected={activeTab === 'All'}
+              onClick={() => { setActiveTab('All'); setSelectedDomain(null) }}
+              className={`px-4 py-2 rounded-full text-sm font-medium ${activeTab === 'All' ? 'border-2 border-gray-900 bg-white font-semibold shadow-sm' : 'text-gray-600 bg-gray-100'}`}
             >
-              Summer Internship
+              All
             </button>
             <button
-              type="button"
-              onClick={() => {
-                if (selectedSeason === "Winter") setSeasonOpen((s) => !s)
-                else {
-                  setSelectedSeason("Winter")
-                  setSeasonOpen(true)
-                }
-              }}
-              aria-expanded={selectedSeason === "Winter" && seasonOpen}
-              className={`px-4 py-2 rounded-md text-sm font-medium ${selectedSeason === "Winter" ? (seasonOpen ? "bg-blue-700 text-white" : "bg-white text-gray-800") : "text-gray-700"}`}
+              role="tab"
+              aria-selected={activeTab === 'Summer'}
+              onClick={() => { setActiveTab('Summer'); setSelectedDomain(null) }}
+              className={`px-4 py-2 rounded-full text-sm font-medium ${activeTab === 'Summer' ? 'border-2 border-gray-900 bg-white font-semibold shadow-sm' : 'text-gray-600 bg-gray-100'}`}
             >
-              Winter Internship
+              Summer Internship 2025
+            </button>
+            <button
+              role="tab"
+              aria-selected={activeTab === 'Winter'}
+              onClick={() => { setActiveTab('Winter'); setSelectedDomain(null) }}
+              className={`px-4 py-2 rounded-full text-sm font-medium ${activeTab === 'Winter' ? 'border-2 border-emerald-500 bg-white font-semibold shadow-sm ring-2 ring-emerald-200 animate-[pulse_1.4s_ease-in-out_infinite]' : 'text-gray-600 bg-gray-100'}`}
+            >
+              <span className="inline-flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" aria-hidden />
+                <span>Winter Internship 2025–26</span>
+              </span>
             </button>
           </div>
 
-          <div className="ml-auto flex items-center gap-2">
-            <label htmlFor="year" className="text-xs text-gray-600">Year</label>
-            <select
-              id="year"
-              value={selectedYear}
-              onChange={(e) => setSelectedYear(Number(e.target.value))}
-              className="rounded-md border px-3 py-2 text-sm outline-none"
-            >
-              <option value={2025}>2025</option>
-              <option value={2026}>2026</option>
-            </select>
+          <div className="ml-auto text-sm text-gray-600">
+            {activeTab === 'All' ? `${seasonCounts.total} projects` : activeTab === 'Summer' ? `${seasonCounts.summer} projects` : `${seasonCounts.winter} projects`}
           </div>
         </div>
 
-        {seasonOpen && (
-          <div className="mt-4 rounded-lg border bg-white p-4 shadow-sm">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search by project, department, or domain"
-                aria-label="Search projects"
-                className="flex-1 rounded-md border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[var(--color-chart-2)]"
-              />
+        <div className="mt-4 rounded-lg border bg-white p-4 shadow-sm">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search by project, department, or domain"
+              aria-label="Search projects"
+              className="flex-1 rounded-md border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[var(--color-chart-2)]"
+            />
 
-              <div className="flex items-center gap-2">
-                <label htmlFor="domain" className="text-xs text-gray-600">Filter by domain</label>
-                <select
-                  id="domain"
-                  value={domainFilter}
-                  onChange={(e) => setDomainFilter(e.target.value)}
-                  className="rounded-md border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[var(--color-chart-3)]"
-                >
-                  {domains.map((d) => (
-                    <option key={d} value={d}>{d}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="ml-auto flex items-center gap-2">
-                <button type="button" onClick={() => setSeasonOpen(false)} className="text-sm text-gray-500">Hide filters</button>
-              </div>
+            <div className="flex items-center gap-2">
+              <label htmlFor="domain" className="text-xs text-gray-600">Filter by domain</label>
+              <select
+                id="domain"
+                value={domainFilter}
+                onChange={(e) => setDomainFilter(e.target.value)}
+                className="rounded-md border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[var(--color-chart-3)]"
+              >
+                {domains.map((d) => (
+                  <option key={d} value={d}>{d}</option>
+                ))}
+              </select>
             </div>
           </div>
-        )}
+        </div>
       </div>
 
       {/* Charts */}
       <div className="mt-8">
         <InternshipCharts
-          domainCounts={data.domainCounts}
-          totalInterns={data.summary.totalInterns}
+          domainCounts={derivedDomainCounts}
+          ongoingCount={displayedProjects.filter((p) => p.status === 'ongoing').length}
+          completedCount={displayedProjects.filter((p) => p.status === 'completed').length}
+          selectedDomain={selectedDomain}
+          onSelectDomain={(d) => setSelectedDomain(d)}
         />
       </div>
 
-      {/* Season controls: Pill-style segmented controls (All / Ongoing) */}
-      <div className="mt-6">
-        <p className="text-sm text-gray-600">View by season</p>
-        <div className="mt-3 space-y-4">
-          {/* Summer */}
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-sm font-medium">Summer Internship</div>
-              <div className="text-xs text-gray-600">{seasonCounts.summer} projects</div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div
-                className="relative inline-flex items-center rounded-full bg-gray-100 p-1 text-sm"
-                role="group"
-                aria-label="Summer status filter"
-              >
-                <div
-                  className="absolute left-1 top-1 bottom-1 w-1/2 rounded-full bg-white shadow transition-transform"
-                  style={{ transform: statusFilter === "Ongoing" ? "translateX(100%)" : "translateX(0%)" }}
-                  aria-hidden
-                />
-                <button
-                  type="button"
-                  className={`relative z-10 px-3 py-1 rounded-full ${statusFilter === "All" ? "text-black" : "text-gray-600"}`}
-                  onClick={() => { setStatusFilter("All"); setSelectedSeason("Summer"); setSeasonOpen(true) }}
-                >
-                  All
-                </button>
-                <button
-                  type="button"
-                  className={`relative z-10 px-3 py-1 rounded-full ${statusFilter === "Ongoing" ? "text-black" : "text-gray-600"}`}
-                  onClick={() => { setStatusFilter("Ongoing"); setSelectedSeason("Summer"); setSeasonOpen(true) }}
-                >
-                  Ongoing
-                </button>
-              </div>
-            </div>
-          </div>
 
-          {/* Winter */}
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-sm font-medium">Winter Internship</div>
-              <div className="text-xs text-gray-600">{seasonCounts.winter} projects</div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div
-                className="relative inline-flex items-center rounded-full bg-gray-100 p-1 text-sm"
-                role="group"
-                aria-label="Winter status filter"
-              >
-                <div
-                  className="absolute left-1 top-1 bottom-1 w-1/2 rounded-full bg-white shadow transition-transform"
-                  style={{ transform: statusFilter === "Ongoing" ? "translateX(100%)" : "translateX(0%)" }}
-                  aria-hidden
-                />
-                <button
-                  type="button"
-                  className={`relative z-10 px-3 py-1 rounded-full ${statusFilter === "All" ? "text-black" : "text-gray-600"}`}
-                  onClick={() => { setStatusFilter("All"); setSelectedSeason("Winter"); setSeasonOpen(true) }}
-                >
-                  All
-                </button>
-                <button
-                  type="button"
-                  className={`relative z-10 px-3 py-1 rounded-full ${statusFilter === "Ongoing" ? "text-black" : "text-gray-600"}`}
-                  onClick={() => { setStatusFilter("Ongoing"); setSelectedSeason("Winter"); setSeasonOpen(true) }}
-                >
-                  Ongoing
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* Projects Grid */}
       <div className="mt-10">
-        <h2 className="text-pretty text-2xl font-semibold text-gray-900">{selectedSeason} Internship</h2>
+        <h2 className="text-pretty text-2xl font-semibold text-gray-900">
+          {activeTab === 'All' ? 'All Projects' : activeTab === 'Summer' ? 'Summer Internship 2025' : 'Winter Internship 2025–26'}
+        </h2>
+
+        {selectedDomain && (
+          <div className="mt-3 inline-flex items-center gap-3 rounded-full border bg-white px-3 py-2 shadow-sm">
+            <span className="text-xs text-gray-600">Filtering by</span>
+            <strong className="text-sm">{selectedDomain}</strong>
+            <span className="text-xs text-gray-500">({displayedProjects.length} project{displayedProjects.length !== 1 ? 's' : ''})</span>
+            <button onClick={() => setSelectedDomain(null)} className="ml-3 rounded bg-gray-100 px-2 py-1 text-xs">Clear</button>
+          </div>
+        )}
+
         {filteredProjects.length === 0 ? (
-          <p className="mt-4 text-sm text-gray-600">No projects match your filters for {selectedYear}.</p>
+          <p className="mt-4 text-sm text-gray-600">No projects match your filters for the selected tab.</p>
         ) : (
           <div className="mt-4 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-            {filteredProjects.map((proj) => (
+            {displayedProjects.map((proj) => (
               <InternshipProjectCard key={proj.id} project={proj} />
             ))}
           </div>

@@ -19,14 +19,20 @@ type DomainDatum = { domain: string; interns: number }
 
 export function InternshipCharts({
   domainCounts,
-  totalInterns,
+  ongoingCount,
+  completedCount,
+  selectedDomain,
+  onSelectDomain,
 }: {
   domainCounts: DomainDatum[]
-  totalInterns: number
+  ongoingCount: number
+  completedCount: number
+  selectedDomain?: string | null
+  onSelectDomain?: (domain: string | null) => void
 }) {
   const pieData = [
-    { name: "Completed", value: totalInterns },
-    { name: "Ongoing", value: 4 },
+    { name: "Completed", value: completedCount },
+    { name: "Ongoing", value: ongoingCount },
   ]
 
   // Domain-specific color mapping
@@ -47,10 +53,12 @@ export function InternshipCharts({
     return domainColors[domain] || "#6b7280" // Gray fallback
   }
 
+  const maxCount = domainCounts.reduce((m, d) => Math.max(m, d.interns), 0)
+
   return (
     <div className="grid gap-6 md:grid-cols-2">
       <div className="h-80 rounded border bg-card p-4">
-        <h3 className="text-sm font-medium text-gray-900">Interns by Domain</h3>
+        <h3 className="text-sm font-medium text-gray-900">Projects by Domain</h3>
         <div className="mt-2 h-[85%]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={domainCounts} margin={{ top: 8, right: 16, left: 0, bottom: 50 }}>
@@ -81,10 +89,10 @@ export function InternshipCharts({
                 interval={0}
                 tick={{ fill: '#374151' }}
               />
-              <YAxis allowDecimals={false} fontSize={12} domain={[0, 20]} />
-              <Tooltip cursor={{ fill: "rgba(59,130,246,0.05)" }} formatter={(value: any, _name, props: any) => [value, props?.payload?.domain]} />
+              <YAxis allowDecimals={false} fontSize={12} domain={[0, Math.max(5, maxCount + 1)]} />
+              <Tooltip cursor={{ fill: "rgba(59,130,246,0.05)" }} formatter={(value: any, _name, props: any) => [value, `${props?.payload?.domain} project(s)`]} />
               <Legend />
-              <InteractiveBars data={domainCounts} getDomainColor={getDomainColor} />
+              <InteractiveBars data={domainCounts} getDomainColor={getDomainColor} selectedDomain={selectedDomain} onSelectDomain={onSelectDomain} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -107,8 +115,13 @@ export function InternshipCharts({
                 isAnimationActive
                 animationDuration={800}
               >
-                {pieData.map((_, i) => (
-                  <Cell key={i} fill={i === 0 ? "#3b82f6" : "#10b981"} />
+                {pieData.map((d, i) => (
+                  <Cell
+                    key={i}
+                    fill={d.name === 'Completed' ? '#3b82f6' : '#10b981'}
+                    stroke={d.name === 'Completed' ? '#2563eb' : '#059669'}
+                    strokeWidth={2}
+                  />
                 ))}
               </Pie>
             </PieChart>
@@ -122,16 +135,20 @@ export function InternshipCharts({
 function InteractiveBars({
   data,
   getDomainColor,
+  selectedDomain,
+  onSelectDomain,
 }: {
   data: { domain: string; interns: number }[]
   getDomainColor: (domain: string) => string
+  selectedDomain?: string | null
+  onSelectDomain?: (domain: string | null) => void
 }) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
 
   return (
     <Bar
       dataKey="interns"
-      name="Interns"
+      name="Projects"
       radius={[8, 8, 0, 0]}
       isAnimationActive
       animationDuration={800}
@@ -141,8 +158,9 @@ function InteractiveBars({
       {data.map((d, i) => {
         const isDim = activeIndex !== null && activeIndex !== i
         const fill = `url(#grad-${i}${isDim ? "-dim" : ""})`
-        const stroke = activeIndex === i ? getDomainColor(d.domain) : "transparent"
-        const strokeWidth = activeIndex === i ? 2 : 0
+        const isSelected = selectedDomain === d.domain
+        const stroke = isSelected ? getDomainColor(d.domain) : activeIndex === i ? getDomainColor(d.domain) : "transparent"
+        const strokeWidth = isSelected || activeIndex === i ? 2 : 0
         return (
           <Cell
             key={i}
@@ -150,6 +168,7 @@ function InteractiveBars({
             stroke={stroke}
             strokeWidth={strokeWidth}
             onMouseEnter={() => setActiveIndex(i)}
+            onClick={() => onSelectDomain ? onSelectDomain(isSelected ? null : d.domain) : null}
             cursor="pointer"
           />
         )
