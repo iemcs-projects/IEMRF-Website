@@ -15,6 +15,7 @@ import { useState } from "react"
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
+  { href: "/solutions", label: "IEM Solutions" },
   { href: "/programs", label: "Programs" },
   { href: "/research", label: "Research" },
   { href: "/startups", label: "Startups" },
@@ -55,6 +56,9 @@ export function SiteHeader() {
           <Link href="/" className="rounded px-3 py-2 text-sm text-gray-200 hover:text-white hover:bg-gray-800">Home</Link>
           {/* About - direct link (no dropdown) */}
           <Link href="/about" className={`rounded px-3 py-2 text-sm ${pathname==='/about' ? 'bg-gray-800 text-white' : 'text-gray-200 hover:text-white hover:bg-gray-800'}`}>About</Link>
+
+          {/* IEM Solutions - direct link */}
+          <Link href="/solutions" className={`rounded px-3 py-2 text-sm ${pathname==='/solutions' || pathname.startsWith('/solutions/') ? 'bg-gray-800 text-white' : 'text-gray-200 hover:text-white hover:bg-gray-800'}`}>IEM Solutions</Link>
 
           {/* Programs dropdown */}
           <DropdownMenu>
