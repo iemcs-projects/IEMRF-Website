@@ -258,4 +258,45 @@ export const leadershipTeam: LeadershipProfile[] = [
     //   "Corporate Partnership Framework",
     // ],
   },
+
+  {
+    id: "dr-r-basu",
+    name: "Prof. (Dr.) Rana Basu",
+    role: "Associated Faculty – IEMRF (Innovation & Entrepreneurship)",
+    // designation: "Director of Academic Programs & Industry Relations",
+    bio: "Prof. (Dr.) R. Basu is an Associate Professor in the Department of Management with academic and research expertise spanning Operations and Supply Chain Management, Entrepreneurship, and Innovation Management. He holds a Ph.D. from IIT Kharagpur, and his academic experience spans leading institutions where he has been actively engaged in teaching, research, curriculum development, and departmental academic administration. He also possesses experience in technology incubation and entrepreneurship development initiatives. His current research focuses on sustainable business models for startups and MSMEs, emphasizing the integration of operations excellence, innovation strategies, and entrepreneurial ecosystems to foster long-term value creation and sustainable enterprise development.",
+    // expertise: [
+    //   "Program Management",
+    //   "Industry Relations",
+    //   "Academic Administration",
+    //   "Partnership Development",
+    //   "Curriculum Design",
+    // ],
+    // education: [
+    //   "M.S. in Engineering Management, Stanford University (2010)",
+    //   "B.Tech in Mechanical Engineering, IIT Kharagpur (2008)",
+    //   "Certificate in Project Management, PMI (2012)",
+    // ],
+    // publications: [
+    //   "Industry-Academia Collaboration Models (Journal of Engineering Education, 2024)",
+    //   "Effective Program Management in Higher Education (Academic Management Review, 2023)",
+    //   "Building Sustainable University-Industry Partnerships (Higher Education Policy, 2022)",
+    // ],
+    // achievements: [
+    //   "Excellence in Program Management Award, IEMRF (2023)",
+    //   "Successfully launched 12 industry collaboration programs",
+    //   "Established partnerships with 50+ companies",
+    //   "Managed programs with 500+ participants annually",
+    // ],
+    linkedin: "https://www.linkedin.com/in/chirabrata-majumder-8277249/",
+    // email: "vikram.iyer@iemrf.org",
+    image: "/Chirabrata_Majumder.png",
+    // researchInterests: ["Educational Innovation", "Industry 4.0", "Skill Development", "Program Effectiveness"],
+    // currentProjects: [
+    //   "Industry Mentorship Program Expansion",
+    //   "Skills Gap Analysis Study",
+    //   "Corporate Partnership Framework",
+    // ],
+  },
+
 ]
