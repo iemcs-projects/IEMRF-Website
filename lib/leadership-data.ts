@@ -290,7 +290,7 @@ export const leadershipTeam: LeadershipProfile[] = [
     // ],
     linkedin: "https://www.linkedin.com/in/chirabrata-majumder-8277249/",
     // email: "vikram.iyer@iemrf.org",
-    image: "/Chirabrata_Majumder.png",
+    image: "/Dr. Rana basu.jpg",
     // researchInterests: ["Educational Innovation", "Industry 4.0", "Skill Development", "Program Effectiveness"],
     // currentProjects: [
     //   "Industry Mentorship Program Expansion",
